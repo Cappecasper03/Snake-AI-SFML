@@ -9,6 +9,9 @@ class GameArea
 public:
 	GameArea(int _gridSize, float _height, int _width);
 
+	// Calculates where to set the position to based on the origo position
+	void SetPositionByOrigo(sf::RectangleShape& _rectangleShape, sf::Vector2f _origoPosition);
+
 	int GetGridSize() { return gridSize; }
 	float GetTileSize() { return tileSize; }
 	sf::RectangleShape GetWalls() { return walls; }

@@ -10,8 +10,7 @@ GameArea::GameArea(int _gridSize, float _height, int _width)
 	walls.setFillColor(sf::Color::Transparent);
 	walls.setOutlineColor(sf::Color::Blue);
 	walls.setOutlineThickness(outlineThickness);
-	/*SetPositionByOrigo(walls, sf::Vector2f(_width / 2.f, _height / 2.f));
-	_rectangleShape.setPosition(sf::Vector2f(_origoPosition.x - (_rectangleShape.getSize().x / 2), _origoPosition.y - (_rectangleShape.getSize().y / 2)));*/
+	SetPositionByOrigo(walls, sf::Vector2f(_width / 2.f, _height / 2.f));
 
 	outlineThickness /= 4;
 	for(int i = 0; i < gridSize - 1; i++)
@@ -19,13 +18,16 @@ GameArea::GameArea(int _gridSize, float _height, int _width)
 		sf::RectangleShape line;
 		line.setFillColor(sf::Color::Blue);
 		line.setSize(sf::Vector2f(outlineThickness, _height));
-		/*SetPositionByOrigo(line, sf::Vector2f(walls.getPosition().x + (tileSize * (i + 1)), _height / 2.f));
-		_rectangleShape.setPosition(sf::Vector2f(_origoPosition.x - (_rectangleShape.getSize().x / 2), _origoPosition.y - (_rectangleShape.getSize().y / 2)));*/
+		SetPositionByOrigo(line, sf::Vector2f(walls.getPosition().x + (tileSize * (i + 1)), _height / 2.f));
 		gridLines.push_back(line);
 
 		line.setSize(sf::Vector2f(_height, outlineThickness));
-		/*SetPositionByOrigo(line, sf::Vector2f(_width / 2.f, walls.getPosition().y + (tileSize * (i + 1))));
-		_rectangleShape.setPosition(sf::Vector2f(_origoPosition.x - (_rectangleShape.getSize().x / 2), _origoPosition.y - (_rectangleShape.getSize().y / 2)));*/
+		SetPositionByOrigo(line, sf::Vector2f(_width / 2.f, walls.getPosition().y + (tileSize * (i + 1))));
 		gridLines.push_back(line);
 	}
+}
+
+void GameArea::SetPositionByOrigo(sf::RectangleShape& _rectangleShape, sf::Vector2f _origoPosition)
+{
+	_rectangleShape.setPosition(sf::Vector2f(_origoPosition.x - (_rectangleShape.getSize().x / 2), _origoPosition.y - (_rectangleShape.getSize().y / 2)));
 }
