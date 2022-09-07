@@ -4,7 +4,7 @@
 
 #include "SFML/Graphics.hpp"
 
-class GameArea 
+class GameArea
 {
 public:
 	GameArea(int _gridSize, float _height, int _width);
