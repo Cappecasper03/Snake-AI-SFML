@@ -4,7 +4,8 @@ GameArea::GameArea(int _gridSize, float _height, int _width)
 {
 	gridSize = _gridSize;
 
-	float outlineThickness = 10;
+	// Initializes the area walls
+	float outlineThickness = 100.f / gridSize;
 	tileSize = (_height - outlineThickness * 2) / gridSize;
 	walls.setSize(sf::Vector2f(_height - outlineThickness * 2, _height - outlineThickness * 2));
 	walls.setFillColor(sf::Color::Transparent);
@@ -12,6 +13,7 @@ GameArea::GameArea(int _gridSize, float _height, int _width)
 	walls.setOutlineThickness(outlineThickness);
 	SetPositionByOrigo(walls, sf::Vector2f(_width / 2.f, _height / 2.f));
 
+	// Initializes the grid lines
 	outlineThickness /= 4;
 	for(int i = 0; i < gridSize - 1; i++)
 	{
@@ -25,6 +27,10 @@ GameArea::GameArea(int _gridSize, float _height, int _width)
 		SetPositionByOrigo(line, sf::Vector2f(_width / 2.f, walls.getPosition().y + (tileSize * (i + 1))));
 		gridLines.push_back(line);
 	}
+}
+
+GameArea::~GameArea()
+{
 }
 
 void GameArea::SetPositionByOrigo(sf::RectangleShape& _rectangleShape, sf::Vector2f _origoPosition)

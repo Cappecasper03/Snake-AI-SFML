@@ -1,6 +1,8 @@
 #include "Food.h"
+#include "SnakePart.h"
 
 #include <random>
+#include <vector>
 
 Food::Food(GameArea _area)
 {
@@ -10,23 +12,51 @@ Food::Food(GameArea _area)
 	RandomizeLocation(_area);
 }
 
-void Food::SetPositionByOrigo(sf::RectangleShape& _rectangleShape, sf::Vector2f _origoPosition)
+Food::~Food()
 {
-	_rectangleShape.setPosition(sf::Vector2f(_origoPosition.x - (_rectangleShape.getSize().x / 2), _origoPosition.y - (_rectangleShape.getSize().y / 2)));
 }
 
-void Food::SetPositionByGridLocation(sf::RectangleShape& _rectangleShape, GridLocation _location, GameArea _area)
+void Food::SetPositionByOrigo(sf::Vector2f _origoPosition)
+{
+	visual.setPosition(sf::Vector2f(_origoPosition.x - (visual.getSize().x / 2), _origoPosition.y - (visual.getSize().y / 2)));
+}
+
+void Food::SetPositionByGridLocation(GridLocation _location, GameArea _area)
 {
 	float x = _area.GetWalls().getPosition().x + _area.GetTileSize() * _location.GetX() - _area.GetTileSize() / 2;
 	float y = _area.GetGridLines()[0].getSize().y - (_area.GetWalls().getPosition().y + _area.GetTileSize() * _location.GetY() - _area.GetTileSize() / 2);
-	SetPositionByOrigo(_rectangleShape, sf::Vector2f(x, y));
+	SetPositionByOrigo(sf::Vector2f(x, y));
 }
 
 void Food::RandomizeLocation(GameArea _area)
 {
-	//Todo Implement check for snake
-	std::srand(std::time(0));
-	location.SetLocation(GridLocation(1 + (std::rand() % _area.GetGridSize()), 1 + (std::rand() % _area.GetGridSize())));
+	std::srand((unsigned int)std::time(0));
+	do
+	{
+		location.SetLocation(GridLocation(1 + (std::rand() % _area.GetGridSize()), 1 + (std::rand() % _area.GetGridSize())));
+	} while(location.GetX() == _area.GetGridSize() / 2 && location.GetY() == _area.GetGridSize() / 2);
 
-	SetPositionByGridLocation(visual, location, _area);
+	SetPositionByGridLocation(location, _area);
+}
+
+void Food::RandomizeLocation(GameArea _area, std::vector<SnakePart> _snake)
+{
+	std::srand((unsigned int)std::time(0));
+	bool onSnake = false;
+	do
+	{
+		onSnake = false;
+		location.SetLocation(GridLocation(1 + (std::rand() % _area.GetGridSize()), 1 + (std::rand() % _area.GetGridSize())));
+
+		for(SnakePart snakePart : _snake)
+		{
+			if(location.Equals(snakePart.GetLocation()))
+			{
+				onSnake = true;
+				break;
+			}
+		}
+	} while(onSnake);
+
+	SetPositionByGridLocation(location, _area);
 }
