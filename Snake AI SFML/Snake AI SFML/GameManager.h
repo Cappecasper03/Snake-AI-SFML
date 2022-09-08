@@ -4,6 +4,7 @@
 #include "GameArea.h"
 #include "SnakePart.h"
 #include "Food.h"
+#include "AI.h"
 
 #include <chrono>
 
@@ -46,6 +47,7 @@ private:
 	float FixedUpdateTime; // Used to set the fixed update interval (time in seconds)
 
 	GameArea area; // Stores the game area information
+	AI player; // Controls the snake
 	std::vector<SnakePart> snake; // Controls the snake
 	GridLocation moveDirection; // Stores the current direction to move in
 	Food food; // Controls the food
