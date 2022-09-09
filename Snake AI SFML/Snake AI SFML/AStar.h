@@ -18,17 +18,17 @@ struct Directions // Stores the predefined values for all directions
 class AStar
 {
 public:
-	AStar(GridLocation _startNode, GridLocation _goalNode, GameArea _area, std::vector<std::vector<SnakePart>>& _snakeClones);
+	AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones);
 	~AStar();
 
 	std::vector<GridLocation>& GetMoves() { return moves; };
 
 private:
-	void Search(PathMarker& _playerNode, GameArea _area, std::vector<std::vector<SnakePart>>& _snakeClones);
+	void Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones);
 	bool UpdateMarker(GridLocation _position, float _g, float _h, float _f, PathMarker* _parent);
 	bool IsClosed(GridLocation _location);
 	void GetPath(PathMarker* _lastPos);
-	void MoveSnakeClone(GridLocation _moveDirection, GameArea _area, std::vector<SnakePart>& _snakeClone);
+	void MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, std::vector<SnakePart>& _snakeClone);
 
 	std::vector<PathMarker> open; // Stores the pathmarkers that hasn't been closed
 	std::vector<PathMarker> closed; // Stores all the closed pathmarkers

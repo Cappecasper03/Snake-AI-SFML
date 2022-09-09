@@ -2,7 +2,6 @@
 
 #include <Windows.h>
 #include <iostream>
-#include <chrono>
 
 CocktailSorter::CocktailSorter(std::vector<PathMarker>& _listToSort) :
 	sortingList(_listToSort),

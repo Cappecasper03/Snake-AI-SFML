@@ -1,6 +1,6 @@
 #include "GameManager.h"
 
-#include "SFML/System/Clock.hpp"
+#include <chrono>
 
 int main()
 {
@@ -12,9 +12,8 @@ int main()
 		begin = std::chrono::steady_clock::now();
 		game.Update(deltaTime);
 		std::chrono::steady_clock::time_point stop = std::chrono::steady_clock::now();
-		deltaTime = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(stop - begin).count();
-		deltaTime /= 1000000000;
+		deltaTime = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(stop - begin).count() / 1000000000;
 	}
-	
+
 	return 0;
 }

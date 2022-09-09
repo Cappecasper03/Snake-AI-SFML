@@ -12,7 +12,7 @@ public:
 	AI();
 	~AI();
 
-	GridLocation GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea _area);
+	GridLocation GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea& _area);
 	void ClearMoves() { moves.clear(); }
 
 private:

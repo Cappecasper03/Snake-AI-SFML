@@ -11,7 +11,7 @@ AI::~AI()
 {
 }
 
-GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea _area)
+GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea& _area)
 {
 	GridLocation move;
 	if(moves.size() == 0)
@@ -23,11 +23,9 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 
 		moves = aStar.GetMoves();
 	}
-	else
-	{
-		move = moves[moves.size() - 1];
-		moves.erase(moves.end() - 1);
-	}
+
+	move = moves[moves.size() - 1];
+	moves.erase(moves.end() - 1);
 
 	return move;
 }

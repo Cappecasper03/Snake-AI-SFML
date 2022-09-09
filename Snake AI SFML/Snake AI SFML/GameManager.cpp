@@ -1,9 +1,11 @@
 #include "GameManager.h"
 
+#include <iostream>
+
 GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
 	area(10, (float)window.getSize().y, window.getSize().x),
-	FixedUpdateTimer(0.f),
+	FixedUpdateTimer(0),
 	FixedUpdateTime(0.2f),
 	state(GameStates::Playing),
 	moveDirection(),
@@ -18,13 +20,13 @@ GameManager::~GameManager()
 
 void GameManager::Update(double _deltaTime)
 {
-	FixedUpdateTimer += (float)_deltaTime;
+	FixedUpdateTimer += _deltaTime;
 
 	if(state == GameStates::Playing)
 	{
 		if(FixedUpdateTimer >= FixedUpdateTime) // Only updates on fixed intervals
 		{
-			FixedUpdateTimer = 0.f;
+			FixedUpdateTimer = _deltaTime;
 
 			moveDirection = player.GetNextMove(snake, food.GetLocation(), area);
 			Move();
@@ -64,7 +66,7 @@ void GameManager::CheckCollision()
 	}
 	else
 	{
-		for(int i = 3; i < snake.size(); i++) // i = 3 because the head can't be on the 2 first body parts 
+		for(int i = 2; i < snake.size(); i++) // i = 2 because the head can't be on the first body parts 
 		{
 			// If the snake head is on it's body
 			if(snake[0].GetLocation().Equals(snake[i].GetLocation()))

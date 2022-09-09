@@ -6,8 +6,6 @@
 #include "Food.h"
 #include "AI.h"
 
-#include <chrono>
-
 struct Directions // Stores the predefined values for all directions
 {
 	const GridLocation Up = GridLocation(0, 1);
@@ -42,7 +40,7 @@ private:
 
 	GameStates state; // Stores the state of the game
 	sf::RenderWindow window; // Controls the game window
-	float FixedUpdateTimer; // Used to update with a fixed interval (time in seconds)
+	double FixedUpdateTimer; // Used to update with a fixed interval (time in seconds)
 	float FixedUpdateTime; // Used to set the fixed update interval (time in seconds)
 
 	GameArea area; // Stores the game area information

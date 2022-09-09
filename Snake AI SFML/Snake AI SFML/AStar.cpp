@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea _area, std::vector<std::vector<SnakePart>>& _snakeClones) :
+AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones) :
 	open(),
 	closed(),
 	startNode(_startNode, 0, 0, 0, nullptr),
@@ -26,7 +26,7 @@ AStar::~AStar()
 {
 }
 
-void AStar::Search(PathMarker& _playerNode, GameArea _area, std::vector<std::vector<SnakePart>>& _snakeClones)
+void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones)
 {
 	if(_playerNode.Equals(goalNode)) // Found the best path
 	{
@@ -48,7 +48,6 @@ void AStar::Search(PathMarker& _playerNode, GameArea _area, std::vector<std::vec
 				currentSnake = i;
 				break;
 			}
-
 		}
 
 		// If the 'neighbourNode' is outside of the game area
@@ -150,7 +149,7 @@ void AStar::GetPath(PathMarker* _lastPos)
 	}
 }
 
-void AStar::MoveSnakeClone(GridLocation _moveDirection, GameArea _area, std::vector<SnakePart>& _snakeClone)
+void AStar::MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, std::vector<SnakePart>& _snakeClone)
 {
 	for(int i = (int)_snakeClone.size() - 1; i > 0; i--)
 	{

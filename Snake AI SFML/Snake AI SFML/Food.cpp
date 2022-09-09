@@ -4,7 +4,7 @@
 #include <random>
 #include <vector>
 
-Food::Food(GameArea _area)
+Food::Food(GameArea& _area)
 {
 	visual.setFillColor(sf::Color::Red);
 	visual.setSize(sf::Vector2f(_area.GetTileSize() * 0.5f, _area.GetTileSize() * 0.5f));
@@ -21,14 +21,14 @@ void Food::SetPositionByOrigo(sf::Vector2f _origoPosition)
 	visual.setPosition(sf::Vector2f(_origoPosition.x - (visual.getSize().x / 2), _origoPosition.y - (visual.getSize().y / 2)));
 }
 
-void Food::SetPositionByGridLocation(GridLocation _location, GameArea _area)
+void Food::SetPositionByGridLocation(GridLocation _location, GameArea& _area)
 {
 	float x = _area.GetWalls().getPosition().x + _area.GetTileSize() * _location.GetX() - _area.GetTileSize() / 2;
 	float y = _area.GetGridLines()[0].getSize().y - (_area.GetWalls().getPosition().y + _area.GetTileSize() * _location.GetY() - _area.GetTileSize() / 2);
 	SetPositionByOrigo(sf::Vector2f(x, y));
 }
 
-void Food::RandomizeLocation(GameArea _area)
+void Food::RandomizeLocation(GameArea& _area)
 {
 	std::srand((unsigned int)std::time(0));
 	do
@@ -39,7 +39,7 @@ void Food::RandomizeLocation(GameArea _area)
 	SetPositionByGridLocation(location, _area);
 }
 
-void Food::RandomizeLocation(GameArea _area, std::vector<SnakePart> _snake)
+void Food::RandomizeLocation(GameArea& _area, std::vector<SnakePart> _snake)
 {
 	std::srand((unsigned int)std::time(0));
 	bool onSnake = false;
