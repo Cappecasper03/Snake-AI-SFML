@@ -3,24 +3,32 @@
 
 #include <math.h>
 
-AStar::AStar(GridLocation _startNode, GridLocation _goalNode) :
+AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea _area, std::vector<std::vector<SnakePart>>& _snakeClones) :
 	open(),
 	closed(),
 	startNode(_startNode, 0, 0, 0, nullptr),
 	goalNode(_goalNode, 0, 0, 0, nullptr),
 	lastPos(startNode),
-	stillSearching(true)
+	stillSearching(true),
+	moves()
 {
 	open.push_back(startNode);
+
+	do
+	{
+		Search(lastPos, _area, _snakeClones);
+	} while(stillSearching);
+
+	GetPath(&lastPos);
 }
 
 AStar::~AStar()
 {
 }
 
-void AStar::Search(PathMarker* _playerNode, GameArea _area)
+void AStar::Search(PathMarker& _playerNode, GameArea _area, std::vector<std::vector<SnakePart>>& _snakeClones)
 {
-	if(_playerNode->Equals(goalNode)) // Found the best path
+	if(_playerNode.Equals(goalNode)) // Found the best path
 	{
 		stillSearching = false;
 		return;
@@ -28,10 +36,20 @@ void AStar::Search(PathMarker* _playerNode, GameArea _area)
 
 	for(GridLocation dir : directions)
 	{
-		GridLocation neighbourNode = dir.Add(_playerNode->GetLocation());
+		GridLocation neighbourNode = dir.Add(_playerNode.GetLocation());
 
 		int currentSnake = 0;
-		//Todo Clone the snake move
+		for(int i = 0; i < _snakeClones.size(); i++)
+		{
+			if(_snakeClones[i][0].GetLocation().ToVector() == _playerNode.GetLocation().ToVector())
+			{
+				_snakeClones.push_back(std::vector<SnakePart>(_snakeClones[i]));
+				MoveSnakeClone(dir, _area, _snakeClones[_snakeClones.size() - 1]);
+				currentSnake = i;
+				break;
+			}
+
+		}
 
 		// If the 'neighbourNode' is outside of the game area
 		if(neighbourNode.GetX() <= 0 || neighbourNode.GetX() > _area.GetGridSize() ||
@@ -44,20 +62,30 @@ void AStar::Search(PathMarker* _playerNode, GameArea _area)
 			continue;
 
 		bool hitsItself = false;
-		//Todo Checking if the 'neighbourNode' is a part of the snake
+		for(SnakePart part : _snakeClones[currentSnake])
+		{
+			if(!neighbourNode.Equals(startNode.GetLocation()) && neighbourNode.Equals(part.GetLocation()))
+			{
+				hitsItself = true;
+				break;
+			}
+		}
 
 		if(hitsItself)
 			continue;
 
 		// Distance between 'startNode' and 'neighbourNode'
-		float G = abs(_playerNode->GetLocation().GetX() - neighbourNode.GetX()) + abs(_playerNode->GetLocation().GetY() - neighbourNode.GetY()) + _playerNode->GetG();
+		float G = abs(_playerNode.GetLocation().GetX() - neighbourNode.GetX()) + abs(_playerNode.GetLocation().GetY() - neighbourNode.GetY()) + _playerNode.GetG();
 		// Distance between 'neighbourNode' and 'goalNode'
-		float H = abs(neighbourNode.GetX() - goalNode.GetLocation().GetX()) + abs(neighbourNode.GetY() - goalNode.GetLocation().GetY());
+		float H = (float)abs(neighbourNode.GetX() - goalNode.GetLocation().GetX()) + abs(neighbourNode.GetY() - goalNode.GetLocation().GetY());
 		// The sum of G and H which also is the distance between the 'startNode' and the 'goalNode'
 		float F = G + H;
 
-		if(!UpdateMarker(neighbourNode, G, H, F, _playerNode))
-			open.push_back(PathMarker(neighbourNode, G, H, F, _playerNode));
+		if(!UpdateMarker(neighbourNode, G, H, F, &_playerNode))
+		{
+			PathMarker* node = new PathMarker(_playerNode);
+			open.push_back(PathMarker(neighbourNode, G, H, F, node));
+		}
 	}
 
 	CocktailSorter sorter(open);
@@ -95,14 +123,38 @@ bool AStar::IsClosed(GridLocation _location)
 	return false;
 }
 
-void AStar::GetPath()
+void AStar::GetPath(PathMarker* _lastPos)
 {
-	PathMarker* path = &lastPos;
+	PathMarker* path = _lastPos;
 
-	while(!path && !path->Equals(goalNode))
+	while(path && !path->Equals(startNode))
 	{
-		//Todo Get Path Code
+		if(path->GetLocation().GetX() > path->GetParent()->GetLocation().GetX())
+		{
+			moves.push_back(dir.Right);
+		}
+		else if(path->GetLocation().GetX() < path->GetParent()->GetLocation().GetX())
+		{
+			moves.push_back(dir.Left);
+		}
+		else if(path->GetLocation().GetY() > path->GetParent()->GetLocation().GetY())
+		{
+			moves.push_back(dir.Up);
+		}
+		else if(path->GetLocation().GetY() < path->GetParent()->GetLocation().GetY())
+		{
+			moves.push_back(dir.Down);
+		}
 
 		path = path->GetParent();
 	}
+}
+
+void AStar::MoveSnakeClone(GridLocation _moveDirection, GameArea _area, std::vector<SnakePart>& _snakeClone)
+{
+	for(int i = (int)_snakeClone.size() - 1; i > 0; i--)
+	{
+		_snakeClone[i].Move(_snakeClone[i - 1].GetLocation(), _area);
+	}
+	_snakeClone[0].Move(_moveDirection, _area);
 }

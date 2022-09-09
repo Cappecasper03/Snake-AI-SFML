@@ -7,7 +7,7 @@
 CocktailSorter::CocktailSorter(std::vector<PathMarker>& _listToSort) :
 	sortingList(_listToSort),
 	start(0),
-	end(sortingList.size() - 1)
+	end((int)sortingList.size() - 1)
 {
 }
 
@@ -24,7 +24,7 @@ bool CocktailSorter::Sort(void)
 	int newStart = start;
 	int newEnd = end;
 
-	for(int i = start; i < end; i++) // Sorts from the highest to the lowest number (Start - End)
+	for(size_t i = start; i < end; i++) // Sorts from the lowest to the highest number (Start - End)
 	{
 		if(sortingList[i].GetF() > sortingList[i + 1].GetF())
 		{
@@ -32,7 +32,7 @@ bool CocktailSorter::Sort(void)
 			sortingList[i] = sortingList[i + 1];
 			sortingList[i + 1] = temp;
 			stillSorting = true;
-			newEnd = i;
+			newEnd = (int)i;
 		}
 	}
 	if(!stillSorting) // If the list is already sorted we can end the sorting
@@ -40,7 +40,7 @@ bool CocktailSorter::Sort(void)
 		return stillSorting;
 	}
 	end = newEnd;
-	for(int i = end; i > start; i--) // Sorts from the lowest to the highest number (End - Start)
+	for(size_t i = end; i > start; i--) // Sorts from the highest to the lowest number (End - Start)
 	{
 		if(sortingList[i].GetF() < sortingList[i - 1].GetF())
 		{
@@ -48,7 +48,7 @@ bool CocktailSorter::Sort(void)
 			sortingList[i] = sortingList[i - 1];
 			sortingList[i - 1] = temp;
 			stillSorting = true;
-			newStart = i;
+			newStart = (int)i;
 		}
 	}
 	start = newStart;

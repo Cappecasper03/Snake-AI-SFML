@@ -6,9 +6,9 @@ GameManager::GameManager() :
 	FixedUpdateTimer(0.f),
 	FixedUpdateTime(0.2f),
 	state(GameStates::Playing),
+	moveDirection(),
 	food(area)
 {
-	moveDirection = directions.None;
 	snake.push_back(SnakePart(GridLocation(area.GetGridSize() / 2, area.GetGridSize() / 2), area, 0.7f));
 }
 
@@ -26,6 +26,7 @@ void GameManager::Update(double _deltaTime)
 		{
 			FixedUpdateTimer = 0.f;
 
+			moveDirection = player.GetNextMove(snake, food.GetLocation(), area);
 			Move();
 			CheckCollision();
 		}
@@ -63,7 +64,7 @@ void GameManager::CheckCollision()
 	}
 	else
 	{
-		for(int i = 1; i < snake.size(); i++)
+		for(int i = 3; i < snake.size(); i++) // i = 3 because the head can't be on the 2 first body parts 
 		{
 			// If the snake head is on it's body
 			if(snake[0].GetLocation().Equals(snake[i].GetLocation()))

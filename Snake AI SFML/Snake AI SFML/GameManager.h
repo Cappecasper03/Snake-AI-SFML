@@ -14,7 +14,6 @@ struct Directions // Stores the predefined values for all directions
 	const GridLocation Down = GridLocation(0, -1);
 	const GridLocation Right = GridLocation(1, 0);
 	const GridLocation Left = GridLocation(-1, 0);
-	const GridLocation None = GridLocation(0, 0);
 };
 
 enum GameStates

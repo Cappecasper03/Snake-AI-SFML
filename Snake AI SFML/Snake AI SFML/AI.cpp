@@ -1,9 +1,33 @@
 #include "AI.h"
+#include "AStar.h"
 
-AI::AI()
+AI::AI() :
+	moves(),
+	snakeClone()
 {
 }
 
 AI::~AI()
 {
+}
+
+GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea _area)
+{
+	GridLocation move;
+	if(moves.size() == 0)
+	{
+		snakeClone.clear();
+		snakeClone.push_back(_snake);
+
+		AStar aStar(snakeClone[0][0].GetLocation(), _food, _area, snakeClone);
+
+		moves = aStar.GetMoves();
+	}
+	else
+	{
+		move = moves[moves.size() - 1];
+		moves.erase(moves.end() - 1);
+	}
+
+	return move;
 }

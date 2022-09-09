@@ -5,8 +5,7 @@ PathMarker::PathMarker(GridLocation _location, float _g, float _h, float _f, Pat
 	G(_g),
 	H(_h),
 	F(_f),
-	parent(_parent),
-	closed(false)
+	parent(_parent)
 {
 }
 
