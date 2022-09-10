@@ -1,7 +1,5 @@
 #include "GameManager.h"
 
-#include <iostream>
-
 GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
 	area(10, (float)window.getSize().y, window.getSize().x),
@@ -12,6 +10,7 @@ GameManager::GameManager() :
 	food(area)
 {
 	snake.push_back(SnakePart(GridLocation(area.GetGridSize() / 2, area.GetGridSize() / 2), area, 0.7f));
+	snake.push_back(SnakePart(snake[snake.size() - 1].GetLocation(), area, 0.5f));
 }
 
 GameManager::~GameManager()
@@ -26,7 +25,7 @@ void GameManager::Update(double _deltaTime)
 	{
 		if(FixedUpdateTimer >= FixedUpdateTime) // Only updates on fixed intervals
 		{
-			FixedUpdateTimer = _deltaTime;
+			FixedUpdateTimer = 0;
 
 			moveDirection = player.GetNextMove(snake, food.GetLocation(), area);
 			Move();
@@ -58,22 +57,6 @@ void GameManager::Move()
 
 void GameManager::CheckCollision()
 {
-	// If the snake head is outside the border walls
-	if(snake[0].GetLocation().GetX() <= 0 || snake[0].GetLocation().GetX() > area.GetGridSize() ||
-		snake[0].GetLocation().GetY() <= 0 || snake[0].GetLocation().GetY() > area.GetGridSize())
-	{
-		state = GameStates::Lost;
-	}
-	else
-	{
-		for(int i = 2; i < snake.size(); i++) // i = 2 because the head can't be on the first body parts 
-		{
-			// If the snake head is on it's body
-			if(snake[0].GetLocation().Equals(snake[i].GetLocation()))
-				state = GameStates::Lost;
-		}
-	}
-
 	// If the snake head is on the food
 	if(snake[0].GetLocation().Equals(food.GetLocation()))
 	{
@@ -83,12 +66,32 @@ void GameManager::CheckCollision()
 		if(snake.size() == area.GetGridSize() * area.GetGridSize())
 			state = GameStates::Won;
 	}
+
+	// If the snake head is outside the border walls
+	if(snake[0].GetLocation().GetX() <= 0 || snake[0].GetLocation().GetX() > area.GetGridSize() ||
+		snake[0].GetLocation().GetY() <= 0 || snake[0].GetLocation().GetY() > area.GetGridSize())
+	{
+		state = GameStates::Lost;
+	}
+	else
+	{
+		for(int i = 2; i < snake.size(); i++) // i = 2 because the head can't be on the first body part or itself
+		{
+			// If the snake head is on it's body
+			if(snake[0].GetLocation().Equals(snake[i].GetLocation()))
+				state = GameStates::Lost;
+		}
+	}
 }
 
 void GameManager::Draw()
 {
 	window.clear(sf::Color::Black);
 	window.draw(area.GetWalls());
+	for(int i = 0; i < player.GetPath().size(); i++)
+	{
+		window.draw(player.GetPath()[i].GetMarker());
+	}
 	for(int i = 0; i < area.GetGridLines().size(); i++)
 	{
 		window.draw(area.GetGridLines()[i]);

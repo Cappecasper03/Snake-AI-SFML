@@ -16,10 +16,10 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 
 	do
 	{
-		Search(lastPos, _area, _snakeClones);
+		Search(lastPos, _area, _snakeClones); //Todo Fix memory leak
 	} while(stillSearching);
 
-	GetPath(&lastPos);
+	GetPath(&lastPos, _area);
 }
 
 AStar::~AStar()
@@ -65,8 +65,12 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		{
 			if(!neighbourNode.Equals(startNode.GetLocation()) && neighbourNode.Equals(part.GetLocation()))
 			{
-				hitsItself = true;
-				break;
+				std::vector<SnakePart> tempSnakeClone = _snakeClones[currentSnake];
+				if(!neighbourNode.Equals(tempSnakeClone[tempSnakeClone.size() - 1].GetLocation()))
+				{
+					hitsItself = true;
+					break;
+				}
 			}
 		}
 
@@ -122,7 +126,7 @@ bool AStar::IsClosed(GridLocation _location)
 	return false;
 }
 
-void AStar::GetPath(PathMarker* _lastPos)
+void AStar::GetPath(PathMarker* _lastPos, GameArea& _area)
 {
 	PathMarker* path = _lastPos;
 
@@ -130,19 +134,19 @@ void AStar::GetPath(PathMarker* _lastPos)
 	{
 		if(path->GetLocation().GetX() > path->GetParent()->GetLocation().GetX())
 		{
-			moves.push_back(dir.Right);
+			moves.push_back(PathMarker(dir.Right, path->GetLocation(), _area));
 		}
 		else if(path->GetLocation().GetX() < path->GetParent()->GetLocation().GetX())
 		{
-			moves.push_back(dir.Left);
+			moves.push_back(PathMarker(dir.Left, path->GetLocation(), _area));
 		}
 		else if(path->GetLocation().GetY() > path->GetParent()->GetLocation().GetY())
 		{
-			moves.push_back(dir.Up);
+			moves.push_back(PathMarker(dir.Up, path->GetLocation(), _area));
 		}
 		else if(path->GetLocation().GetY() < path->GetParent()->GetLocation().GetY())
 		{
-			moves.push_back(dir.Down);
+			moves.push_back(PathMarker(dir.Down, path->GetLocation(), _area));
 		}
 
 		path = path->GetParent();

@@ -24,7 +24,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 		moves = aStar.GetMoves();
 	}
 
-	move = moves[moves.size() - 1];
+	move = moves[moves.size() - 1].GetLocation(); // GetLocation in this case is GetDirection
 	moves.erase(moves.end() - 1);
 
 	return move;

@@ -6,23 +6,11 @@ SnakePart::SnakePart(GridLocation _location, GameArea& _area, float _percentOfTi
 	visual.setFillColor(sf::Color::Green);
 	visual.setSize(sf::Vector2f(_area.GetTileSize() * _percentOfTile, _area.GetTileSize() * _percentOfTile));
 
-	SetPositionByGridLocation(location, _area);
+	SetPositionByGridLocation(_area);
 }
 
 SnakePart::~SnakePart()
 {
-}
-
-void SnakePart::SetPositionByOrigo(sf::Vector2f _origoPosition)
-{
-	visual.setPosition(sf::Vector2f(_origoPosition.x - (visual.getSize().x / 2), _origoPosition.y - (visual.getSize().y / 2)));
-}
-
-void SnakePart::SetPositionByGridLocation(GridLocation _location, GameArea& _area)
-{
-	float x = _area.GetWalls().getPosition().x + _area.GetTileSize() * _location.GetX() - _area.GetTileSize() / 2;
-	float y = _area.GetGridLines()[0].getSize().y - (_area.GetWalls().getPosition().y + _area.GetTileSize() * _location.GetY() - _area.GetTileSize() / 2);
-	SetPositionByOrigo(sf::Vector2f(x, y));
 }
 
 void SnakePart::Move(GridLocation _locationOrDir, GameArea& _area)
@@ -32,5 +20,17 @@ void SnakePart::Move(GridLocation _locationOrDir, GameArea& _area)
 	else
 		location.MoveLocation(_locationOrDir);
 
-	SetPositionByGridLocation(location, _area);
+	SetPositionByGridLocation(_area);
+}
+
+void SnakePart::SetPositionByOrigo(sf::Vector2f _origoPosition)
+{
+	visual.setPosition(sf::Vector2f(_origoPosition.x - (visual.getSize().x / 2), _origoPosition.y - (visual.getSize().y / 2)));
+}
+
+void SnakePart::SetPositionByGridLocation(GameArea& _area)
+{
+	float x = _area.GetWalls().getPosition().x + _area.GetTileSize() * location.GetX() - _area.GetTileSize() / 2;
+	float y = _area.GetGridLines()[0].getSize().y - (_area.GetWalls().getPosition().y + _area.GetTileSize() * location.GetY() - _area.GetTileSize() / 2);
+	SetPositionByOrigo(sf::Vector2f(x, y));
 }

@@ -2,7 +2,10 @@
 
 GameArea::GameArea(int _gridSize, float _height, int _width)
 {
-	gridSize = _gridSize;
+	if(_gridSize % 2 == 1)
+		gridSize = _gridSize + 1;
+	else
+		gridSize = _gridSize;
 
 	// Initializes the area walls
 	float outlineThickness = 100.f / gridSize;
