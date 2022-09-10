@@ -16,7 +16,7 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 
 	do
 	{
-		Search(lastPos, _area, _snakeClones); //Todo Fix memory leak
+		Search(lastPos, _area, _snakeClones);
 	} while(stillSearching);
 
 	GetPath(&lastPos, _area);
@@ -41,6 +41,7 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		int currentSnake = 0;
 		for(int i = 0; i < _snakeClones.size(); i++)
 		{
+			// Finds the current position and makes a copy to move
 			if(_snakeClones[i][0].GetLocation().ToVector() == _playerNode.GetLocation().ToVector())
 			{
 				_snakeClones.push_back(std::vector<SnakePart>(_snakeClones[i]));
@@ -63,10 +64,16 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		bool hitsItself = false;
 		for(SnakePart part : _snakeClones[currentSnake])
 		{
+			// If the 'neighbourNode' is one the snake (Excluding the head & tail)
 			if(!neighbourNode.Equals(startNode.GetLocation()) && neighbourNode.Equals(part.GetLocation()))
 			{
 				std::vector<SnakePart> tempSnakeClone = _snakeClones[currentSnake];
-				if(!neighbourNode.Equals(tempSnakeClone[tempSnakeClone.size() - 1].GetLocation()))
+				if(tempSnakeClone.size() > 2 && !neighbourNode.Equals(tempSnakeClone[tempSnakeClone.size() - 1].GetLocation()))
+				{
+					hitsItself = true;
+					break;
+				}
+				else if(tempSnakeClone.size() <= 2)
 				{
 					hitsItself = true;
 					break;
@@ -86,7 +93,7 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 
 		if(!UpdateMarker(neighbourNode, G, H, F, &_playerNode))
 		{
-			PathMarker* node = new PathMarker(_playerNode);
+			PathMarker* node = new PathMarker(_playerNode); //* Probable cause to memory leaks
 			open.push_back(PathMarker(neighbourNode, G, H, F, node));
 		}
 	}

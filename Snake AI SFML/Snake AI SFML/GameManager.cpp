@@ -1,8 +1,10 @@
 #include "GameManager.h"
 
+#include <thread>
+
 GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
-	area(10, (float)window.getSize().y, window.getSize().x),
+	area(30, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
 	FixedUpdateTime(0.2f),
 	state(GameStates::Playing),
@@ -27,7 +29,7 @@ void GameManager::Update(double _deltaTime)
 		{
 			FixedUpdateTimer = 0;
 
-			moveDirection = player.GetNextMove(snake, food.GetLocation(), area);
+			moveDirection = player.GetNextMove(snake, food.GetLocation(), area); //Todo Move to it's own thread
 			Move();
 			CheckCollision();
 		}

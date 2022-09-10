@@ -19,7 +19,8 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 		snakeClone.clear();
 		snakeClone.push_back(_snake);
 
-		AStar aStar(snakeClone[0][0].GetLocation(), _food, _area, snakeClone);
+		//Todo Fix memory leak
+		AStar aStar(snakeClone[0][0].GetLocation(), _food, _area, snakeClone); // Find the fastest path
 
 		moves = aStar.GetMoves();
 	}
