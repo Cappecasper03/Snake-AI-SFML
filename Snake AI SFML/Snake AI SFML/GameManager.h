@@ -28,7 +28,7 @@ public:
 	GameManager();
 	~GameManager();
 
-	void Update(double _deltaTime);
+	void Update(sf::Time _deltaTime);
 	void Move();
 	void Grow() { snake.push_back(SnakePart(snake[snake.size() - 1].GetLocation(), area, 0.5f)); }
 	void CheckCollision();

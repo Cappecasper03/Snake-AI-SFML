@@ -76,6 +76,7 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 			// If the 'neighbourNode' is one the snake (Excluding the head & tail)
 			if(!neighbourNode.Equals(startNode.GetLocation()) && neighbourNode.Equals(part.GetLocation()))
 			{
+				//Todo Fix the turn the opposite way
 				std::vector<SnakePart> tempSnakeClone = _snakeClones[currentSnake];
 				if(tempSnakeClone.size() > 2 && !neighbourNode.Equals(tempSnakeClone[tempSnakeClone.size() - 1].GetLocation()))
 				{

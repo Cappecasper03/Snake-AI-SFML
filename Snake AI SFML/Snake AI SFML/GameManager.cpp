@@ -4,7 +4,7 @@
 
 GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
-	area(50, (float)window.getSize().y, window.getSize().x),
+	area(10, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
 	FixedUpdateTime(0.2f),
 	state(GameStates::Playing),
@@ -19,9 +19,9 @@ GameManager::~GameManager()
 {
 }
 
-void GameManager::Update(double _deltaTime)
+void GameManager::Update(sf::Time _deltaTime)
 {
-	FixedUpdateTimer += _deltaTime;
+	FixedUpdateTimer += _deltaTime.asSeconds();
 
 	if(state == GameStates::Playing)
 	{
