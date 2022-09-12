@@ -24,6 +24,15 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 
 AStar::~AStar()
 {
+	for(PathMarker marker : open)
+	{
+		delete marker.GetParent();
+	}
+
+	for(PathMarker marker : closed)
+	{
+		delete marker.GetParent();
+	}
 }
 
 void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones)

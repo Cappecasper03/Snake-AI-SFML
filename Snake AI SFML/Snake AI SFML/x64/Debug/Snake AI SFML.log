@@ -1,12 +1,2 @@
 ﻿  AI.cpp
-  AStar.cpp
-  CocktailSorter.cpp
-  Food.cpp
-  GameArea.cpp
-  GameManager.cpp
-  GridLocation.cpp
-  main.cpp
-  PathMarker.cpp
-  SnakePart.cpp
-  Generating Code...
-  Snake AI SFML.vcxproj -> F:\GitHub\Snake-AI-SFML\Snake AI SFML\x64\Debug\Snake AI SFML.exe
+  Snake AI SFML.vcxproj -> D:\GitHub Personal\Snake-AI-SFML\Snake AI SFML\x64\Debug\Snake AI SFML.exe

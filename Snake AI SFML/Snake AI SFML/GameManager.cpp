@@ -4,7 +4,7 @@
 
 GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
-	area(30, (float)window.getSize().y, window.getSize().x),
+	area(50, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
 	FixedUpdateTime(0.2f),
 	state(GameStates::Playing),
