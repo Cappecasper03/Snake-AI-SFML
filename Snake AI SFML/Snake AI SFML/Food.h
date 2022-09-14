@@ -13,7 +13,6 @@ public:
 	Food(GameArea& _area);
 	~Food();
 
-
 	// Randomizes a location in the game area
 	void RandomizeLocation(GameArea& _area);
 	void RandomizeLocation(GameArea& _area, std::vector<SnakePart> _snake);

@@ -41,6 +41,7 @@ private:
 	PathMarker goalNode;
 	PathMarker lastPos;
 	bool stillSearching;
+	bool foundPath;
 
 	std::vector<PathMarker> moves;
 };

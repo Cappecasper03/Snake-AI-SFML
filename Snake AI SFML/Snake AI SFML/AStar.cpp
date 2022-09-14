@@ -10,6 +10,7 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 	goalNode(_goalNode, 0, 0, 0, nullptr),
 	lastPos(startNode),
 	stillSearching(true),
+	foundPath(false),
 	moves()
 {
 	open.push_back(startNode);
@@ -19,7 +20,8 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 		Search(lastPos, _area, _snakeClones);
 	} while(stillSearching);
 
-	GetPath(&lastPos, _area);
+	if(foundPath)
+		GetPath(&lastPos, _area);
 }
 
 AStar::~AStar()
@@ -40,6 +42,7 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 	if(_playerNode.Equals(goalNode)) // Found the best path
 	{
 		stillSearching = false;
+		foundPath = true;
 		return;
 	}
 
@@ -73,17 +76,18 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		bool hitsItself = false;
 		for(SnakePart part : _snakeClones[currentSnake])
 		{
-			// If the 'neighbourNode' is one the snake (Excluding the head & tail)
+			// If the 'neighbourNode' is one the snake
 			if(!neighbourNode.Equals(startNode.GetLocation()) && neighbourNode.Equals(part.GetLocation()))
 			{
-				//Todo Fix the turn the opposite way
 				std::vector<SnakePart> tempSnakeClone = _snakeClones[currentSnake];
-				if(tempSnakeClone.size() > 2 && !neighbourNode.Equals(tempSnakeClone[tempSnakeClone.size() - 1].GetLocation()))
+				// Ignores the tail of the snake is longer than 3 unless it is the first move after eating the food
+				if(tempSnakeClone.size() > 3 && closed.size() <= 4 || !neighbourNode.Equals(tempSnakeClone[tempSnakeClone.size() - 1].GetLocation()))
 				{
 					hitsItself = true;
 					break;
 				}
-				else if(tempSnakeClone.size() <= 2)
+				// Doesn't ignore the tail if the snake is shorter or equal to 3
+				else if(tempSnakeClone.size() <= 3)
 				{
 					hitsItself = true;
 					break;
@@ -103,9 +107,16 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 
 		if(!UpdateMarker(neighbourNode, G, H, F, &_playerNode))
 		{
-			PathMarker* node = new PathMarker(_playerNode); //* Probable cause to memory leaks
+			PathMarker* node = new PathMarker(_playerNode);
 			open.push_back(PathMarker(neighbourNode, G, H, F, node));
 		}
+	}
+
+	if(open.size() == 0)
+	{
+		stillSearching = false;
+		foundPath = false;
+		return;
 	}
 
 	CocktailSorter sorter(open);

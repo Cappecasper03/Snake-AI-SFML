@@ -18,6 +18,8 @@ GameArea::GameArea(int _gridSize, float _height, int _width)
 
 	// Initializes the grid lines
 	outlineThickness /= 4;
+	if(outlineThickness < 1)
+		outlineThickness = 1;
 	for(int i = 0; i < gridSize - 1; i++)
 	{
 		sf::RectangleShape line;

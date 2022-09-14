@@ -19,13 +19,17 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 		snakeClone.clear();
 		snakeClone.push_back(_snake);
 
+		// Returns a stop if it can't find a path
 		AStar aStar(snakeClone[0][0].GetLocation(), _food, _area, snakeClone); // Find the fastest path
 
 		moves = aStar.GetMoves();
 	}
 
-	move = moves[moves.size() - 1].GetLocation(); // GetLocation in this case is GetDirection
-	moves.erase(moves.end() - 1);
+	if(moves.size() != 0)
+	{
+		move = moves[moves.size() - 1].GetLocation(); // GetLocation in this case is GetDirection
+		moves.erase(moves.end() - 1);
+	}
 
 	return move;
 }

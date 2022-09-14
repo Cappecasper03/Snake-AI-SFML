@@ -6,13 +6,13 @@ GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
 	area(10, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
-	FixedUpdateTime(0.2f),
+	FixedUpdateTime(0.15f),
 	state(GameStates::Playing),
 	moveDirection(),
 	food(area)
 {
 	snake.push_back(SnakePart(GridLocation(area.GetGridSize() / 2, area.GetGridSize() / 2), area, 0.7f));
-	snake.push_back(SnakePart(snake[snake.size() - 1].GetLocation(), area, 0.5f));
+	Grow();
 }
 
 GameManager::~GameManager()
@@ -90,13 +90,13 @@ void GameManager::Draw()
 {
 	window.clear(sf::Color::Black);
 	window.draw(area.GetWalls());
-	for(int i = 0; i < player.GetPath().size(); i++)
-	{
-		window.draw(player.GetPath()[i].GetMarker());
-	}
 	for(int i = 0; i < area.GetGridLines().size(); i++)
 	{
 		window.draw(area.GetGridLines()[i]);
+	}
+	for(int i = 0; i < player.GetPath().size(); i++)
+	{
+		window.draw(player.GetPath()[i].GetMarker());
 	}
 	window.draw(food.GetVisual());
 	for(SnakePart part : snake)
