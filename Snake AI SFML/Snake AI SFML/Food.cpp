@@ -12,10 +12,6 @@ Food::Food(GameArea& _area)
 	RandomizeLocation(_area);
 }
 
-Food::~Food()
-{
-}
-
 void Food::RandomizeLocation(GameArea& _area)
 {
 	std::srand((unsigned int)std::time(0));

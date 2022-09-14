@@ -11,7 +11,7 @@ class Food
 {
 public:
 	Food(GameArea& _area);
-	~Food();
+	~Food() {};
 
 	// Randomizes a location in the game area
 	void RandomizeLocation(GameArea& _area);

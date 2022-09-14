@@ -11,7 +11,7 @@ class AI
 {
 public:
 	AI();
-	~AI();
+	~AI() {};
 
 	GridLocation GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea& _area);
 	void ClearMoves() { moves.clear(); }

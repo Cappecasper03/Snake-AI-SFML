@@ -20,10 +20,6 @@ PathMarker::PathMarker(GridLocation _location, float _g, float _h, float _f, Pat
 {
 }
 
-PathMarker::~PathMarker()
-{
-}
-
 void PathMarker::Update(float _g, float _h, float _f, PathMarker* _parent)
 {
 	G = _g;

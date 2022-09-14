@@ -1,13 +1,10 @@
 #include "AI.h"
 #include "AStar.h"
+#include "HamiltonianCycle.h"
 
 AI::AI() :
 	moves(),
 	snakeClone()
-{
-}
-
-AI::~AI()
 {
 }
 

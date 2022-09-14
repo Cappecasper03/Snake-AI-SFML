@@ -26,7 +26,7 @@ class GameManager
 {
 public:
 	GameManager();
-	~GameManager();
+	~GameManager() {};
 
 	void Update(sf::Time _deltaTime);
 	void Move();

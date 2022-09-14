@@ -183,7 +183,7 @@ void AStar::GetPath(PathMarker* _lastPos, GameArea& _area)
 
 void AStar::MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, std::vector<SnakePart>& _snakeClone)
 {
-	for(int i = (int)_snakeClone.size() - 1; i > 0; i--)
+	for(size_t i = _snakeClone.size() - 1; i > 0; i--)
 	{
 		_snakeClone[i].Move(_snakeClone[i - 1].GetLocation(), _area);
 	}

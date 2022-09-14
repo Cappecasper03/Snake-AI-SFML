@@ -8,7 +8,7 @@ class GameArea
 {
 public:
 	GameArea(int _gridSize, float _height, int _width);
-	~GameArea();
+	~GameArea(){};
 
 	int GetGridSize() { return gridSize; }
 	float GetTileSize() { return tileSize; }

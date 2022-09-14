@@ -1,7 +1,5 @@
 #include "GameManager.h"
 
-#include <thread>
-
 GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
 	area(10, (float)window.getSize().y, window.getSize().x),
@@ -13,10 +11,6 @@ GameManager::GameManager() :
 {
 	snake.push_back(SnakePart(GridLocation(area.GetGridSize() / 2, area.GetGridSize() / 2), area, 0.7f));
 	Grow();
-}
-
-GameManager::~GameManager()
-{
 }
 
 void GameManager::Update(sf::Time _deltaTime)
@@ -50,7 +44,7 @@ void GameManager::Update(sf::Time _deltaTime)
 
 void GameManager::Move()
 {
-	for(int i = (int)snake.size() - 1; i > 0; i--)
+	for(size_t i = (int)snake.size() - 1; i > 0; i--)
 	{
 		snake[i].Move(snake[i - 1].GetLocation(), area);
 	}
@@ -65,7 +59,7 @@ void GameManager::CheckCollision()
 		Grow();
 		food.RandomizeLocation(area, snake);
 
-		if(snake.size() == area.GetGridSize() * area.GetGridSize())
+		if((int)snake.size() == area.GetGridSize() * area.GetGridSize())
 			state = GameStates::Won;
 	}
 

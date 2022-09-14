@@ -5,7 +5,3 @@ GridLocation::GridLocation(int _x, int _y):
 	y(_y)
 {
 }
-
-GridLocation::~GridLocation()
-{
-}

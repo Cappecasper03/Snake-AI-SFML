@@ -9,7 +9,7 @@ class PathMarker
 public:
 	PathMarker(GridLocation _direction, GridLocation _location, GameArea& _area);
 	PathMarker(GridLocation _location, float _g, float _h, float _f, PathMarker* _parent);
-	~PathMarker();
+	~PathMarker() {};
 
 	bool Equals(PathMarker& _pathmarker) { return location.Equals(_pathmarker.location); }
 	void Update(float _g, float _h, float _f, PathMarker* _parent);

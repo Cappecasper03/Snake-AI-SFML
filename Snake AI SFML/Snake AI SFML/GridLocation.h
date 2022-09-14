@@ -6,7 +6,7 @@ class GridLocation
 {
 public:
 	GridLocation(int _x = 0, int _y = 0);
-	~GridLocation();
+	~GridLocation() {};
 
 	void SetLocation(GridLocation _location) { x = _location.x; y = _location.y; }
 	void MoveLocation(GridLocation _direction) { x += _direction.x; y += _direction.y; }

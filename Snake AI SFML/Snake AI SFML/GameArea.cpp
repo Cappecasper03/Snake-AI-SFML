@@ -34,10 +34,6 @@ GameArea::GameArea(int _gridSize, float _height, int _width)
 	}
 }
 
-GameArea::~GameArea()
-{
-}
-
 void GameArea::SetPositionByOrigo(sf::RectangleShape& _rectangleShape, sf::Vector2f _origoPosition)
 {
 	_rectangleShape.setPosition(sf::Vector2f(_origoPosition.x - (_rectangleShape.getSize().x / 2), _origoPosition.y - (_rectangleShape.getSize().y / 2)));

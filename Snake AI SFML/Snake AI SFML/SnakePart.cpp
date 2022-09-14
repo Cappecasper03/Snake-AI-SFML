@@ -9,10 +9,6 @@ SnakePart::SnakePart(GridLocation _location, GameArea& _area, float _percentOfTi
 	SetPositionByGridLocation(_area);
 }
 
-SnakePart::~SnakePart()
-{
-}
-
 void SnakePart::Move(GridLocation _locationOrDir, GameArea& _area)
 {
 	if(_locationOrDir.GetX() != 0 && _locationOrDir.GetY() != 0)
