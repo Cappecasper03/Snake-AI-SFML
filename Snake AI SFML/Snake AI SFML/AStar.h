@@ -22,6 +22,7 @@ public:
 	~AStar();
 
 	std::vector<PathMarker>& GetMoves() { return moves; };
+	bool HasFoundPath() { return foundPath; }
 
 private:
 	void Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones);
@@ -30,8 +31,8 @@ private:
 	void GetPath(PathMarker* _lastPos, GameArea& _area);
 	void MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, std::vector<SnakePart>& _snakeClone);
 
-	std::vector<PathMarker> open; // Stores the pathmarkers that hasn't been closed
-	std::vector<PathMarker> closed; // Stores all the closed pathmarkers
+	std::vector<PathMarker> open; // Stores the pathmarkers that hasn't been visited
+	std::vector<PathMarker> closed; // Stores all the visited pathmarkers
 
 	// Stores the predefined values for all directions
 	Directions dir;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include "GridLocation.h"
 #include "GameArea.h"
 #include "SnakePart.h"
 #include "Food.h"

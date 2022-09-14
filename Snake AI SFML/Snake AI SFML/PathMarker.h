@@ -7,7 +7,7 @@
 class PathMarker
 {
 public:
-	PathMarker(GridLocation _direction, GridLocation _location, GameArea& _area);
+	PathMarker(GridLocation _location, GameArea& _area);
 	PathMarker(GridLocation _location, float _g, float _h, float _f, PathMarker* _parent);
 	~PathMarker() {};
 

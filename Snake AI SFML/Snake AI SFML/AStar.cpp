@@ -98,11 +98,11 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		if(hitsItself)
 			continue;
 
-		// Distance between 'startNode' and 'neighbourNode'
+		// Distance between 'playerNode' and 'neighbourNode'
 		float G = abs(_playerNode.GetLocation().GetX() - neighbourNode.GetX()) + abs(_playerNode.GetLocation().GetY() - neighbourNode.GetY()) + _playerNode.GetG();
 		// Distance between 'neighbourNode' and 'goalNode'
 		float H = (float)abs(neighbourNode.GetX() - goalNode.GetLocation().GetX()) + abs(neighbourNode.GetY() - goalNode.GetLocation().GetY());
-		// The sum of G and H which also is the distance between the 'startNode' and the 'goalNode'
+		// The sum of G and H
 		float F = G + H;
 
 		if(!UpdateMarker(neighbourNode, G, H, F, &_playerNode))
@@ -160,22 +160,7 @@ void AStar::GetPath(PathMarker* _lastPos, GameArea& _area)
 
 	while(path && !path->Equals(startNode))
 	{
-		if(path->GetLocation().GetX() > path->GetParent()->GetLocation().GetX())
-		{
-			moves.push_back(PathMarker(dir.Right, path->GetLocation(), _area));
-		}
-		else if(path->GetLocation().GetX() < path->GetParent()->GetLocation().GetX())
-		{
-			moves.push_back(PathMarker(dir.Left, path->GetLocation(), _area));
-		}
-		else if(path->GetLocation().GetY() > path->GetParent()->GetLocation().GetY())
-		{
-			moves.push_back(PathMarker(dir.Up, path->GetLocation(), _area));
-		}
-		else if(path->GetLocation().GetY() < path->GetParent()->GetLocation().GetY())
-		{
-			moves.push_back(PathMarker(dir.Down, path->GetLocation(), _area));
-		}
+		moves.push_back(PathMarker(path->GetLocation(), _area));
 
 		path = path->GetParent();
 	}

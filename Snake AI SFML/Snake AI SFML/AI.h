@@ -18,6 +18,8 @@ public:
 	std::vector<PathMarker>& GetPath() { return moves; }
 
 private:
+	void ExtendPath();
+
 	std::vector<std::vector<SnakePart>> snakeClone;
 	std::vector<PathMarker> moves;
 };
