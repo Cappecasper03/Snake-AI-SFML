@@ -47,9 +47,13 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		for(int i = 0; i < _snakeClones.size(); i++)
 		{
 			// Removes all snakeClones except the one that got the food
-			if(_snakeClones[i][0].GetLocation().ToVector() != _playerNode.GetLocation().ToVector())
+			if(_snakeClones[i][0].GetLocation().ToVector() == goalNode.GetLocation().ToVector())
 			{
-				_snakeClones.erase(_snakeClones.begin());
+				std::vector<std::vector<SnakePart>> temp;
+				temp.push_back(_snakeClones[i]);
+				_snakeClones.clear();
+				_snakeClones.push_back(temp[0]);
+				break;
 			}
 		}
 
@@ -89,19 +93,8 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 			// If the 'neighbourNode' is one the snake
 			if(!neighbourNode.Equals(startNode.GetLocation()) && neighbourNode.Equals(part.GetLocation()))
 			{
-				std::vector<SnakePart> tempSnakeClone = _snakeClones[currentSnake];
-				// Ignores the tail of the snake is longer than 3 unless it is the first move after eating the food
-				if(tempSnakeClone.size() > 3 && closed.size() <= 4 || !neighbourNode.Equals(tempSnakeClone[tempSnakeClone.size() - 1].GetLocation()))
-				{
-					hitsItself = true;
-					break;
-				}
-				// Doesn't ignore the tail if the snake is shorter or equal to 3
-				else if(tempSnakeClone.size() <= 3)
-				{
-					hitsItself = true;
-					break;
-				}
+				hitsItself = true;
+				break;
 			}
 		}
 

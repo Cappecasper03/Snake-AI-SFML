@@ -155,11 +155,8 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, std::vector<S
 	}
 
 	moves.clear();
-	if(movesCopy.size() >= _area.GetGridSize() * _area.GetGridSize() - _snakeClone.size())
+	for(int i = 1; i < movesCopy.size(); i++)
 	{
-		for(int i = 1; i < movesCopy.size(); i++)
-		{
-			moves.insert(moves.begin(), movesCopy[i]);
-		}
+		moves.insert(moves.begin(), movesCopy[i]);
 	}
 }

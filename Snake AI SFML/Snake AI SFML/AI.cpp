@@ -20,9 +20,15 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 	AStar aStarFood(_snake[0].GetLocation(), _food, _area, snakeClone);
 	std::vector<PathMarker> movesCopy = aStarFood.GetMoves();
 
-	if(aStarFood.HasFoundPath())
+	if(aStarFood.HasFoundPath() && _snake.size() >= 3)
 	{
+		if(snakeClone[0][0].GetLocation().GetX() == 11 || snakeClone[0][0].GetLocation().GetY() == 11)
+			int i = 0;
 		std::vector<SnakePart> snakeCloneClone(snakeClone[0]);
+		snakeCloneClone.push_back(snakeCloneClone[snakeCloneClone.size() - 1]);
+
+		snakeClone.clear();
+		snakeClone.push_back(snakeCloneClone);
 
 		// Find the longest path to tail
 		HamiltonianCycle hamiltonianCycle(snakeCloneClone, _area, snakeClone);
@@ -58,7 +64,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 					_snake[0].GetLocation().Add(direction.Up).GetY() <= _area.GetGridSize())
 				{
 					int dis = abs(_snake[0].GetLocation().Add(direction.Up).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Up).GetY() - _food.GetY());
-					if(distance < dis)
+					if(distance <= dis)
 					{
 						distance = dis;
 						move = direction.Up;
@@ -74,7 +80,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 					_snake[0].GetLocation().Add(direction.Down).GetY() > 0)
 				{
 					int dis = abs(_snake[0].GetLocation().Add(direction.Down).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Down).GetY() - _food.GetY());
-					if(distance < dis)
+					if(distance <= dis)
 					{
 						distance = dis;
 						move = direction.Down;
@@ -90,7 +96,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 					_snake[0].GetLocation().Add(direction.Right).GetX() <= _area.GetGridSize())
 				{
 					int dis = abs(_snake[0].GetLocation().Add(direction.Right).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Right).GetY() - _food.GetY());
-					if(distance < dis)
+					if(distance <= dis)
 					{
 						distance = dis;
 						move = direction.Right;
@@ -106,7 +112,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 					_snake[0].GetLocation().Add(direction.Left).GetX() > 0)
 				{
 					int dis = abs(_snake[0].GetLocation().Add(direction.Left).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Left).GetY() - _food.GetY());
-					if(distance < dis)
+					if(distance <= dis)
 					{
 						distance = dis;
 						move = direction.Left;
