@@ -4,7 +4,7 @@ GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
 	area(10, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
-	FixedUpdateTime(0.1f),
+	FixedUpdateTime(0.15f),
 	state(GameStates::Playing),
 	moveDirection(),
 	food(area)
@@ -83,19 +83,52 @@ void GameManager::CheckCollision()
 void GameManager::Draw()
 {
 	window.clear(sf::Color::Black);
+	sf::Vertex line[2];
+
 	window.draw(area.GetWalls());
 	for(int i = 0; i < area.GetGridLines().size(); i++)
 	{
 		window.draw(area.GetGridLines()[i]);
 	}
+
+	line[0].color = sf::Color::Magenta;
+	line[1].color = sf::Color::Magenta;
 	for(int i = 0; i < player.GetPath().size(); i++)
 	{
-		window.draw(player.GetPath()[i].GetMarker());
+		sf::RectangleShape marker = player.GetPath()[i].GetMarker();
+		if(i < player.GetPath().size() - 1)
+		{
+			sf::RectangleShape marker2 = player.GetPath()[i + 1].GetMarker();
+
+			line[0].position = marker.getPosition() + marker.getSize() / 2.f;
+			line[1].position = marker2.getPosition() + marker2.getSize() / 2.f;
+		}
+		else
+		{
+			line[0].position = marker.getPosition() + marker.getSize() / 2.f;
+			line[1].position = snake[0].GetVisual().getPosition() + snake[0].GetVisual().getSize() / 2.f;
+		}
+		window.draw(line, 2, sf::Lines);
+		window.draw(marker);
 	}
 	window.draw(food.GetVisual());
-	for(SnakePart part : snake)
+
+	line[0].color = sf::Color::Green;
+	line[1].color = sf::Color::Green;
+	for(int i = 0; i < snake.size(); i++)
 	{
-		window.draw(part.GetVisual());
+		sf::RectangleShape visual = snake[i].GetVisual();
+		if(i < snake.size() - 1)
+		{
+			sf::RectangleShape visual2 = snake[i + 1].GetVisual();
+
+			line[0].position = visual.getPosition() + visual.getSize() / 2.f;
+			line[1].position = visual2.getPosition() + visual2.getSize() / 2.f;
+			window.draw(line, 2, sf::Lines);
+		}
+
+		window.draw(visual);
 	}
+
 	window.display();
 }
