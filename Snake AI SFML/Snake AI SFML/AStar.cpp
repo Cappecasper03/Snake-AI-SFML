@@ -43,6 +43,16 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 	{
 		stillSearching = false;
 		foundPath = true;
+
+		for(int i = 0; i < _snakeClones.size(); i++)
+		{
+			// Removes all snakeClones except the one that got the food
+			if(_snakeClones[i][0].GetLocation().ToVector() != _playerNode.GetLocation().ToVector())
+			{
+				_snakeClones.erase(_snakeClones.begin());
+			}
+		}
+
 		return;
 	}
 

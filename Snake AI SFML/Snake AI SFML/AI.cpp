@@ -1,5 +1,8 @@
 #include "AI.h"
 #include "AStar.h"
+#include "HamiltonianCycle.h"
+
+#include <math.h>
 
 AI::AI() :
 	moves(),
@@ -10,43 +13,114 @@ AI::AI() :
 GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea& _area)
 {
 	GridLocation move;
+	snakeClone.clear();
+	snakeClone.push_back(_snake);
+
+	// Find the shortest path to food
+	AStar aStarFood(_snake[0].GetLocation(), _food, _area, snakeClone);
+	std::vector<PathMarker> movesCopy = aStarFood.GetMoves();
+
+	if(aStarFood.HasFoundPath())
+	{
+		std::vector<SnakePart> snakeCloneClone(snakeClone[0]);
+
+		// Find the longest path to tail
+		HamiltonianCycle hamiltonianCycle(snakeCloneClone, _area, snakeClone);
+		if(hamiltonianCycle.GetMoves().size() == 0)
+			movesCopy.clear();
+		else
+			moves = movesCopy;
+	}
+
 	if(moves.size() == 0)
 	{
-		snakeClone.clear();
-		snakeClone.push_back(_snake);
-
-		// Find the shortest path
-		AStar aStarFood(_snake[0].GetLocation(), _food, _area, snakeClone);
-		moves = aStarFood.GetMoves();
-
-		if(!aStarFood.HasFoundPath())
+		if(movesCopy.size() == 0)
 		{
-			// Find the shortest path
-			AStar aStarTail(snakeClone[snakeClone.size() - 1][0].GetLocation(), snakeClone[snakeClone.size() - 1][snakeClone.size() - 1].GetLocation(), _area, snakeClone); // Find the longest path
+			snakeClone.clear();
+			snakeClone.push_back(_snake);
 
-			// Find the longest path
-			moves = aStarTail.GetMoves();
-			ExtendPath();
+			// Find the longest path to tail
+			HamiltonianCycle hamiltonianCycle(_snake, _area, snakeClone);
+			movesCopy = hamiltonianCycle.GetMoves();
 		}
 
-		if(moves.size() == 0)
+		if(movesCopy.size() == 0)
 		{
-			// Find the shortest path
-			AStar aStarTail(_snake[0].GetLocation(), _snake[_snake.size() - 1].GetLocation(), _area, snakeClone);
+			int distance = 0;
+			bool notUp = false;
+			bool notDown = false;
+			bool notRight = false;
+			bool notLeft = false;
+			Directions direction;
+			for(SnakePart part : _snake)
+			{
+				if(!_snake[0].GetLocation().Add(direction.Up).Equals(part.GetLocation()) && !notUp &&
+					_snake[0].GetLocation().Add(direction.Up).GetY() <= _area.GetGridSize())
+				{
+					int dis = abs(_snake[0].GetLocation().Add(direction.Up).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Up).GetY() - _food.GetY());
+					if(distance < dis)
+					{
+						distance = dis;
+						move = direction.Up;
+					}
+				}
+				else
+				{
+					notUp = true;
+					distance = 0;
+				}
 
-			// Find the longest path
-			moves = aStarTail.GetMoves();
-			ExtendPath();
+				if(!_snake[0].GetLocation().Add(direction.Down).Equals(part.GetLocation()) && !notDown &&
+					_snake[0].GetLocation().Add(direction.Down).GetY() > 0)
+				{
+					int dis = abs(_snake[0].GetLocation().Add(direction.Down).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Down).GetY() - _food.GetY());
+					if(distance < dis)
+					{
+						distance = dis;
+						move = direction.Down;
+					}
+				}
+				else
+				{
+					notDown = true;
+					distance = 0;
+				}
+
+				if(!_snake[0].GetLocation().Add(direction.Right).Equals(part.GetLocation()) && !notRight &&
+					_snake[0].GetLocation().Add(direction.Right).GetX() <= _area.GetGridSize())
+				{
+					int dis = abs(_snake[0].GetLocation().Add(direction.Right).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Right).GetY() - _food.GetY());
+					if(distance < dis)
+					{
+						distance = dis;
+						move = direction.Right;
+					}
+				}
+				else
+				{
+					notRight = true;
+					distance = 0;
+				}
+
+				if(!_snake[0].GetLocation().Add(direction.Left).Equals(part.GetLocation()) && !notLeft &&
+					_snake[0].GetLocation().Add(direction.Left).GetX() > 0)
+				{
+					int dis = abs(_snake[0].GetLocation().Add(direction.Left).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Left).GetY() - _food.GetY());
+					if(distance < dis)
+					{
+						distance = dis;
+						move = direction.Left;
+					}
+				}
+				else
+				{
+					notLeft = true;
+					distance = 0;
+				}
+			}
 		}
 
-		/*
-		1. Compute the shortest path P1 from snake S1's head to the food. If P1 exists, go to step 2. Otherwise, go to step 4.
-		2. Move a virtual snake S2 (the same as S1) to eat the food along path P1.
-		3. Compute the longest path P2 from snake S2's head to its tail. If P2 exists, let D be the first direction in path P1. Otherwise, go to step 4.
-		4. Compute the longest path P3 from snake S1's head to its tail. If P3 exists, let D be the first direction in path P3. Otherwise, go to step 5.
-		5. Let D be the direction that makes the snake the farthest from the food.
-		*/
-
+		moves = movesCopy;
 	}
 
 	if(moves.size() != 0)
@@ -56,8 +130,4 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 	}
 
 	return move;
-}
-
-void AI::ExtendPath()
-{
 }

@@ -9,6 +9,8 @@ GameArea::GameArea(int _gridSize, float _height, int _width)
 
 	// Initializes the area walls
 	float outlineThickness = 100.f / gridSize;
+	if(outlineThickness < 1)
+		outlineThickness = 1;
 	tileSize = (_height - outlineThickness * 2) / gridSize;
 	walls.setSize(sf::Vector2f(_height - outlineThickness * 2, _height - outlineThickness * 2));
 	walls.setFillColor(sf::Color::Transparent);
