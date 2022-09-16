@@ -12,6 +12,8 @@ public:
 	void MoveLocation(GridLocation _direction) { x += _direction.x; y += _direction.y; }
 	GridLocation Add(GridLocation _location) { return  GridLocation(x + _location.GetX(), y + _location.GetY()); }
 
+	bool operator==(GridLocation other) { return ToVector() == other.ToVector(); }
+
 	GridLocation GetDirectionTo(GridLocation _to) { return GridLocation(_to.GetX() - x, _to.GetY() - y); }
 	sf::Vector2f ToVector() { return sf::Vector2f((float)x, (float)y); }
 	bool Equals(GridLocation _location) { return _location.ToVector() == ToVector(); }

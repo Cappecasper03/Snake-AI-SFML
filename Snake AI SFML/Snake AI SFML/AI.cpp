@@ -18,7 +18,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 	snakeClone.push_back(_snake);
 
 	// Find the shortest path to food
-	if(_snake.size() <= _area.GetGridSize() * _area.GetGridSize() * .6f)
+	if(_snake.size() <= _area.GetGridSize() * _area.GetGridSize() * .5f)
 	{
 		AStar aStarFood(_snake[0].GetLocation(), _food, _area, snakeClone);
 		movesCopy = aStarFood.GetMoves();

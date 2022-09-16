@@ -14,6 +14,8 @@ public:
 	bool Equals(PathMarker& _pathmarker) { return location.Equals(_pathmarker.location); }
 	void Update(float _g, float _h, float _f, PathMarker* _parent);
 
+	bool operator==(GridLocation other) { return location == other; }
+
 	GridLocation GetLocation() { return location; }
 	float GetG() { return G; }
 	float GetF() { return F; }

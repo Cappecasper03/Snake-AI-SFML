@@ -107,17 +107,14 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, std::vector<S
 
 void HamiltonianCycle::IsVisited(Node& _cUpRight, Node& _nUpRight, Node& _cDownLeft, Node& _nDownLeft, std::vector<PathMarker>& _movesCopy)
 {
-	for(PathMarker marker : _movesCopy)
-	{
-		if(marker.GetLocation().Equals(_cUpRight.location))
-			_cUpRight.isVisited = true;
-		if(marker.GetLocation().Equals(_nUpRight.location))
-			_nUpRight.isVisited = true;
-		if(marker.GetLocation().Equals(_cDownLeft.location))
-			_cDownLeft.isVisited = true;
-		if(marker.GetLocation().Equals(_nDownLeft.location))
-			_nDownLeft.isVisited = true;
-	}
+	if(std::find(_movesCopy.begin(), _movesCopy.end(), _cUpRight.location) != _movesCopy.end())
+		_cUpRight.isVisited = true;
+	if(std::find(_movesCopy.begin(), _movesCopy.end(), _nUpRight.location) != _movesCopy.end())
+		_nUpRight.isVisited = true;
+	if(std::find(_movesCopy.begin(), _movesCopy.end(), _cDownLeft.location) != _movesCopy.end())
+		_cDownLeft.isVisited = true;
+	if(std::find(_movesCopy.begin(), _movesCopy.end(), _nDownLeft.location) != _movesCopy.end())
+		_nDownLeft.isVisited = true;
 }
 
 void HamiltonianCycle::IsOnSnake(Node& _cUpRight, Node& _nUpRight, Node& _cDownLeft, Node& _nDownLeft, std::vector<SnakePart>& _snakeClone)
