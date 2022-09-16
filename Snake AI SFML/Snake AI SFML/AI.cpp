@@ -22,8 +22,6 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 
 	if(aStarFood.HasFoundPath() && _snake.size() >= 3)
 	{
-		if(snakeClone[0][0].GetLocation().GetX() == 11 || snakeClone[0][0].GetLocation().GetY() == 11)
-			int i = 0;
 		std::vector<SnakePart> snakeCloneClone(snakeClone[0]);
 		snakeCloneClone.push_back(snakeCloneClone[snakeCloneClone.size() - 1]);
 
@@ -38,96 +36,20 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 			moves = movesCopy;
 	}
 
-	if(moves.size() == 0)
+	if(movesCopy.size() == 0)
 	{
-		if(movesCopy.size() == 0)
-		{
-			snakeClone.clear();
-			snakeClone.push_back(_snake);
+		snakeClone.clear();
+		snakeClone.push_back(_snake);
 
-			// Find the longest path to tail
-			HamiltonianCycle hamiltonianCycle(_snake, _area, snakeClone);
-			movesCopy = hamiltonianCycle.GetMoves();
-		}
-
-		if(movesCopy.size() == 0)
-		{
-			int distance = 0;
-			bool notUp = false;
-			bool notDown = false;
-			bool notRight = false;
-			bool notLeft = false;
-			Directions direction;
-			for(SnakePart part : _snake)
-			{
-				if(!_snake[0].GetLocation().Add(direction.Up).Equals(part.GetLocation()) && !notUp &&
-					_snake[0].GetLocation().Add(direction.Up).GetY() <= _area.GetGridSize())
-				{
-					int dis = abs(_snake[0].GetLocation().Add(direction.Up).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Up).GetY() - _food.GetY());
-					if(distance <= dis)
-					{
-						distance = dis;
-						move = direction.Up;
-					}
-				}
-				else
-				{
-					notUp = true;
-					distance = 0;
-				}
-
-				if(!_snake[0].GetLocation().Add(direction.Down).Equals(part.GetLocation()) && !notDown &&
-					_snake[0].GetLocation().Add(direction.Down).GetY() > 0)
-				{
-					int dis = abs(_snake[0].GetLocation().Add(direction.Down).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Down).GetY() - _food.GetY());
-					if(distance <= dis)
-					{
-						distance = dis;
-						move = direction.Down;
-					}
-				}
-				else
-				{
-					notDown = true;
-					distance = 0;
-				}
-
-				if(!_snake[0].GetLocation().Add(direction.Right).Equals(part.GetLocation()) && !notRight &&
-					_snake[0].GetLocation().Add(direction.Right).GetX() <= _area.GetGridSize())
-				{
-					int dis = abs(_snake[0].GetLocation().Add(direction.Right).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Right).GetY() - _food.GetY());
-					if(distance <= dis)
-					{
-						distance = dis;
-						move = direction.Right;
-					}
-				}
-				else
-				{
-					notRight = true;
-					distance = 0;
-				}
-
-				if(!_snake[0].GetLocation().Add(direction.Left).Equals(part.GetLocation()) && !notLeft &&
-					_snake[0].GetLocation().Add(direction.Left).GetX() > 0)
-				{
-					int dis = abs(_snake[0].GetLocation().Add(direction.Left).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Left).GetY() - _food.GetY());
-					if(distance <= dis)
-					{
-						distance = dis;
-						move = direction.Left;
-					}
-				}
-				else
-				{
-					notLeft = true;
-					distance = 0;
-				}
-			}
-		}
-
-		moves = movesCopy;
+		// Find the longest path to tail
+		HamiltonianCycle hamiltonianCycle(_snake, _area, snakeClone);
+		movesCopy = hamiltonianCycle.GetMoves();
 	}
+
+	if(movesCopy.size() == 0)
+		DefaultMove(move, _snake, _food, _area);
+
+	moves = movesCopy;
 
 	if(moves.size() != 0)
 	{
@@ -136,4 +58,80 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 	}
 
 	return move;
+}
+
+void AI::DefaultMove(GridLocation& _move, std::vector<SnakePart>& _snake, GridLocation& _food, GameArea& _area)
+{
+	int distance = 0;
+	bool notUp = false;
+	bool notDown = false;
+	bool notRight = false;
+	bool notLeft = false;
+	Directions direction;
+	for(SnakePart part : _snake)
+	{
+		if(!_snake[0].GetLocation().Add(direction.Up).Equals(part.GetLocation()) && !notUp &&
+			_snake[0].GetLocation().Add(direction.Up).GetY() <= _area.GetGridSize())
+		{
+			int dis = abs(_snake[0].GetLocation().Add(direction.Up).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Up).GetY() - _food.GetY());
+			if(distance <= dis)
+			{
+				distance = dis;
+				_move = direction.Up;
+			}
+		}
+		else
+		{
+			notUp = true;
+			distance = 0;
+		}
+
+		if(!_snake[0].GetLocation().Add(direction.Down).Equals(part.GetLocation()) && !notDown &&
+			_snake[0].GetLocation().Add(direction.Down).GetY() > 0)
+		{
+			int dis = abs(_snake[0].GetLocation().Add(direction.Down).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Down).GetY() - _food.GetY());
+			if(distance <= dis)
+			{
+				distance = dis;
+				_move = direction.Down;
+			}
+		}
+		else
+		{
+			notDown = true;
+			distance = 0;
+		}
+
+		if(!_snake[0].GetLocation().Add(direction.Right).Equals(part.GetLocation()) && !notRight &&
+			_snake[0].GetLocation().Add(direction.Right).GetX() <= _area.GetGridSize())
+		{
+			int dis = abs(_snake[0].GetLocation().Add(direction.Right).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Right).GetY() - _food.GetY());
+			if(distance <= dis)
+			{
+				distance = dis;
+				_move = direction.Right;
+			}
+		}
+		else
+		{
+			notRight = true;
+			distance = 0;
+		}
+
+		if(!_snake[0].GetLocation().Add(direction.Left).Equals(part.GetLocation()) && !notLeft &&
+			_snake[0].GetLocation().Add(direction.Left).GetX() > 0)
+		{
+			int dis = abs(_snake[0].GetLocation().Add(direction.Left).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Left).GetY() - _food.GetY());
+			if(distance <= dis)
+			{
+				distance = dis;
+				_move = direction.Left;
+			}
+		}
+		else
+		{
+			notLeft = true;
+			distance = 0;
+		}
+	}
 }

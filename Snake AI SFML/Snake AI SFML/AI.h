@@ -18,6 +18,8 @@ public:
 	std::vector<PathMarker>& GetPath() { return moves; }
 
 private:
+	void DefaultMove(GridLocation& _move, std::vector<SnakePart>& _snake, GridLocation& _food, GameArea& _area);
+
 	std::vector<std::vector<SnakePart>> snakeClone;
 	std::vector<PathMarker> moves;
 };
