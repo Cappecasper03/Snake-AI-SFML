@@ -4,12 +4,12 @@ GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
 	area(10, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
-	FixedUpdateTime(0.1f),
+	FixedUpdateTime(.1f),
 	state(GameStates::Playing),
 	moveDirection(),
 	food(area)
 {
-	snake.push_back(SnakePart(GridLocation(area.GetGridSize() / 2, area.GetGridSize() / 2), area, 0.7f));
+	snake.push_back(SnakePart(GridLocation(area.GetGridSize() / 2, area.GetGridSize() / 2), area, .7f));
 	Grow();
 }
 
@@ -23,9 +23,9 @@ void GameManager::Update(sf::Time _deltaTime)
 		{
 			FixedUpdateTimer = 0;
 
+			CheckCollision();
 			moveDirection = player.GetNextMove(snake, food.GetLocation(), area);
 			Move();
-			CheckCollision();
 		}
 	}
 
@@ -75,7 +75,9 @@ void GameManager::CheckCollision()
 		{
 			// If the snake head is on it's body
 			if(snake[0].GetLocation().Equals(snake[i].GetLocation()))
+			{
 				state = GameStates::Lost;
+			}
 		}
 	}
 }

@@ -12,28 +12,32 @@ AI::AI() :
 
 GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea& _area)
 {
+	std::vector<PathMarker> movesCopy;
 	GridLocation move;
 	snakeClone.clear();
 	snakeClone.push_back(_snake);
 
 	// Find the shortest path to food
-	AStar aStarFood(_snake[0].GetLocation(), _food, _area, snakeClone);
-	std::vector<PathMarker> movesCopy = aStarFood.GetMoves();
-
-	if(aStarFood.HasFoundPath() && _snake.size() >= 3)
+	if(_snake.size() <= _area.GetGridSize() * _area.GetGridSize() * .6f)
 	{
-		std::vector<SnakePart> snakeCloneClone(snakeClone[0]);
-		snakeCloneClone.push_back(snakeCloneClone[snakeCloneClone.size() - 1]); // Add 1 part because it has "eaten" the food
+		AStar aStarFood(_snake[0].GetLocation(), _food, _area, snakeClone);
+		movesCopy = aStarFood.GetMoves();
 
-		snakeClone.clear();
-		snakeClone.push_back(snakeCloneClone);
+		if(aStarFood.HasFoundPath() && _snake.size() >= 3)
+		{
+			std::vector<SnakePart> snakeCloneClone(snakeClone[0]);
+			snakeCloneClone.push_back(snakeCloneClone[snakeCloneClone.size() - 1]); // Add 1 part because it has "eaten" the food
 
-		// Check if longest path to tail exist
-		HamiltonianCycle hamiltonianCycle(snakeCloneClone, _area, snakeClone);
-		if(hamiltonianCycle.GetMoves().size() == 0)
-			movesCopy.clear();
-		else
-			moves = movesCopy;
+			snakeClone.clear();
+			snakeClone.push_back(snakeCloneClone);
+
+			// Check if longest path to tail exist
+			HamiltonianCycle hamiltonianCycle(snakeCloneClone, _area, snakeClone);
+			if(hamiltonianCycle.GetMoves().size() == 0)
+				movesCopy.clear();
+			else
+				moves = movesCopy;
+		}
 	}
 
 	if(movesCopy.size() == 0)

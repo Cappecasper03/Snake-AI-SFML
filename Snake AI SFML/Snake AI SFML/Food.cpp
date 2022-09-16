@@ -7,7 +7,7 @@
 Food::Food(GameArea& _area)
 {
 	visual.setFillColor(sf::Color::Red);
-	visual.setSize(sf::Vector2f(_area.GetTileSize() * 0.5f, _area.GetTileSize() * 0.5f));
+	visual.setSize(sf::Vector2f(_area.GetTileSize() * .5f, _area.GetTileSize() * .5f));
 
 	RandomizeLocation(_area);
 }

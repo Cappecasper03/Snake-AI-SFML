@@ -96,9 +96,12 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, std::vector<S
 	}
 
 	moves.clear();
-	for(int i = 1; i < movesCopy.size(); i++)
+	if(movesCopy.size() > 1)
 	{
-		moves.insert(moves.begin(), movesCopy[i]);
+		for(int i = 1; i < movesCopy.size(); i++)
+		{
+			moves.insert(moves.begin(), movesCopy[i]);
+		}
 	}
 }
 

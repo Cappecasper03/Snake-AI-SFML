@@ -31,7 +31,7 @@ public:
 
 	void Update(sf::Time _deltaTime);
 	void Move();
-	void Grow() { snake.push_back(SnakePart(snake[snake.size() - 1].GetLocation(), area, 0.5f)); }
+	void Grow() { snake.push_back(SnakePart(snake[snake.size() - 1].GetLocation(), area, .5f)); }
 	void CheckCollision();
 
 	bool IsWindowOpen() { return window.isOpen(); }

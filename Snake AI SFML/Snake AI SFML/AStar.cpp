@@ -14,6 +14,7 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 	moves()
 {
 	open.push_back(startNode);
+
 	// Avoid running into the tail by making it think it is 1 part longer than it actually is
 	std::vector<SnakePart>& temp = _snakeClones[_snakeClones.size() - 1];
 	temp.push_back(temp[temp.size() - 1]);

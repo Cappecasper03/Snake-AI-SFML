@@ -43,7 +43,7 @@ void PathMarker::SetPositionByGridLocation(GridLocation _location, GameArea& _ar
 void PathMarker::SetMarker(GridLocation _location, GameArea& _area)
 {
 	marker.setFillColor(sf::Color::Magenta);
-	marker.setSize(sf::Vector2f(_area.GetTileSize() * 0.2f, _area.GetTileSize() * 0.2f));
+	marker.setSize(sf::Vector2f(_area.GetTileSize() * .2f, _area.GetTileSize() * .2f));
 
 	SetPositionByGridLocation(_location, _area);
 }
