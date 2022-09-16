@@ -23,7 +23,7 @@ void GameManager::Update(sf::Time _deltaTime)
 		{
 			FixedUpdateTimer = 0;
 
-			moveDirection = player.GetNextMove(snake, food.GetLocation(), area); //Todo Move to it's own thread
+			moveDirection = player.GetNextMove(snake, food.GetLocation(), area);
 			Move();
 			CheckCollision();
 		}

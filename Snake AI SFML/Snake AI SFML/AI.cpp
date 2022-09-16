@@ -23,7 +23,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 	if(aStarFood.HasFoundPath() && _snake.size() >= 3)
 	{
 		std::vector<SnakePart> snakeCloneClone(snakeClone[0]);
-		snakeCloneClone.push_back(snakeCloneClone[snakeCloneClone.size() - 1]);
+		snakeCloneClone.push_back(snakeCloneClone[snakeCloneClone.size() - 1]); // Add 1 part because it has "eaten" the food
 
 		snakeClone.clear();
 		snakeClone.push_back(snakeCloneClone);
