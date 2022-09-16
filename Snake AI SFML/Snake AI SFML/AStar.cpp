@@ -65,15 +65,18 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		GridLocation neighbourNode = dir.Add(_playerNode.GetLocation());
 
 		int currentSnake = 0;
-		for(int i = 0; i < _snakeClones.size(); i++)
+		if(!_snakeClones[0][_snakeClones[0].size() - 1].GetLocation().Equals(goalNode.GetLocation()))
 		{
-			// Finds the current position and makes a copy to move
-			if(_snakeClones[i][0].GetLocation().ToVector() == _playerNode.GetLocation().ToVector())
+			for(int i = 0; i < _snakeClones.size(); i++)
 			{
-				_snakeClones.push_back(std::vector<SnakePart>(_snakeClones[i]));
-				MoveSnakeClone(dir, _area, _snakeClones[_snakeClones.size() - 1]);
-				currentSnake = i;
-				break;
+				// Finds the current position and makes a copy to move
+				if(_snakeClones[i][0].GetLocation().ToVector() == _playerNode.GetLocation().ToVector())
+				{
+					_snakeClones.push_back(std::vector<SnakePart>(_snakeClones[i]));
+					MoveSnakeClone(dir, _area, _snakeClones[_snakeClones.size() - 1]);
+					currentSnake = i;
+					break;
+				}
 			}
 		}
 
@@ -93,8 +96,16 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 			// If the 'neighbourNode' is one the snake
 			if(!neighbourNode.Equals(startNode.GetLocation()) && neighbourNode.Equals(part.GetLocation()))
 			{
-				hitsItself = true;
-				break;
+				if(currentSnake == 0 && !neighbourNode.Equals(goalNode.GetLocation()))
+				{
+					hitsItself = true;
+					break;
+				}
+				else if(currentSnake != 0)
+				{
+					hitsItself = true;
+					break;
+				}
 			}
 		}
 

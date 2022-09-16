@@ -61,6 +61,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 	return move;
 }
 
+// Gets the move that gets the snake the furthest from the food and doesn't run into something
 void AI::DefaultMove(GridLocation& _move, std::vector<SnakePart>& _snake, GridLocation& _food, GameArea& _area)
 {
 	int distance = 0;

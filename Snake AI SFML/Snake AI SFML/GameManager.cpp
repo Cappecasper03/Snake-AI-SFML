@@ -111,6 +111,7 @@ void GameManager::Draw()
 		window.draw(line, 2, sf::Lines);
 		window.draw(marker);
 	}
+
 	window.draw(food.GetVisual());
 
 	line[0].color = sf::Color::Green;
