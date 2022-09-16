@@ -25,127 +25,68 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, std::vector<S
 		bool extended = false;
 
 		GridLocation dir = movesCopy[i - 1].GetLocation().GetDirectionTo(movesCopy[i].GetLocation());
-		GridLocation current = movesCopy[i].GetLocation();
 
 		if(dir.GetX() != 0)
 		{
-			GridLocation currentUp = movesCopy[i - 1].GetLocation().Add(directions.Up);
-			bool curUp = true;
-			GridLocation currentDown = movesCopy[i - 1].GetLocation().Add(directions.Down);
-			bool curDown = true;
-			GridLocation nextUp = movesCopy[i].GetLocation().Add(directions.Up);
-			bool nUp = true;
-			GridLocation nextDown = movesCopy[i].GetLocation().Add(directions.Down);
-			bool nDown = true;
+			Node currentUp;
+			currentUp.location = movesCopy[i - 1].GetLocation().Add(directions.Up);
+			Node nextUp;
+			nextUp.location = movesCopy[i].GetLocation().Add(directions.Up);
+			Node currentDown;
+			currentDown.location = movesCopy[i - 1].GetLocation().Add(directions.Down);
+			Node nextDown;
+			nextDown.location = movesCopy[i].GetLocation().Add(directions.Down);
 
-			for(PathMarker marker : movesCopy)
-			{
-				if(marker.GetLocation().Equals(currentUp))
-					curUp = false;
-				if(marker.GetLocation().Equals(currentDown))
-					curDown = false;
-				if(marker.GetLocation().Equals(nextUp))
-					nUp = false;
-				if(marker.GetLocation().Equals(nextDown))
-					nDown = false;
-			}
+			IsVisited(currentUp, nextUp, currentDown, nextDown, movesCopy);
+			IsOutsideGameArea(currentUp, nextUp, currentDown, nextDown, _area);
+			IsOnSnake(currentUp, nextUp, currentDown, nextDown, _snakeClone);
 
-			for(int j = 1; j < _snakeClone.size() - 1; j++)
-			{
-				if(_snakeClone[j].GetLocation().Equals(currentUp))
-					curUp = false;
-				if(_snakeClone[j].GetLocation().Equals(currentDown))
-					curDown = false;
-				if(_snakeClone[j].GetLocation().Equals(nextUp))
-					nUp = false;
-				if(_snakeClone[j].GetLocation().Equals(nextDown))
-					nDown = false;
-			}
-
-			if(currentUp.GetX() <= 0 || currentUp.GetX() > _area.GetGridSize() || currentUp.GetY() <= 0 || currentUp.GetY() > _area.GetGridSize())
-				curUp = false;
-			if(currentDown.GetX() <= 0 || currentDown.GetX() > _area.GetGridSize() || currentDown.GetY() <= 0 || currentDown.GetY() > _area.GetGridSize())
-				curDown = false;
-			if(nextUp.GetX() <= 0 || nextUp.GetX() > _area.GetGridSize() || nextUp.GetY() <= 0 || nextUp.GetY() > _area.GetGridSize())
-				nUp = false;
-			if(nextDown.GetX() <= 0 || nextDown.GetX() > _area.GetGridSize() || nextDown.GetY() <= 0 || nextDown.GetY() > _area.GetGridSize())
-				nDown = false;
-
-			if(curUp && nUp)
+			if(!currentUp.isVisited && !nextUp.isVisited)
 			{
 				movesCopy.erase(movesCopy.begin() + i);
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentUp.Add(dir.Add(directions.Down)), _area));
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentUp.Add(dir), _area));
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentUp, _area));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentUp.location.Add(dir.Add(directions.Down)), _area));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentUp.location.Add(dir), _area));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentUp.location, _area));
 				extended = true;
 			}
-			else if(curDown && nDown)
+			else if(!currentDown.isVisited && !nextDown.isVisited)
 			{
 				movesCopy.erase(movesCopy.begin() + i);
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentDown.Add(dir.Add(directions.Up)), _area));
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentDown.Add(dir), _area));
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentDown, _area));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentDown.location.Add(dir.Add(directions.Up)), _area));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentDown.location.Add(dir), _area));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentDown.location, _area));
 				extended = true;
 			}
 		}
 		else if(dir.GetY() != 0)
 		{
-			GridLocation currentRight = movesCopy[i - 1].GetLocation().Add(directions.Right);
-			bool curRight = true;
-			GridLocation currentLeft = movesCopy[i - 1].GetLocation().Add(directions.Left);
-			bool curLeft = true;
-			GridLocation nextRight = movesCopy[i].GetLocation().Add(directions.Right);
-			bool nRight = true;
-			GridLocation nextLeft = movesCopy[i].GetLocation().Add(directions.Left);
-			bool nLeft = true;
+			Node currentRight;
+			currentRight.location = movesCopy[i - 1].GetLocation().Add(directions.Right);
+			Node nextRight;
+			nextRight.location = movesCopy[i].GetLocation().Add(directions.Right);
+			Node currentLeft;
+			currentLeft.location = movesCopy[i - 1].GetLocation().Add(directions.Left);
+			Node nextLeft;
+			nextLeft.location = movesCopy[i].GetLocation().Add(directions.Left);
 
-			for(PathMarker marker : movesCopy)
-			{
-				if(marker.GetLocation().Equals(currentRight))
-					curRight = false;
-				if(marker.GetLocation().Equals(currentLeft))
-					curLeft = false;
-				if(marker.GetLocation().Equals(nextRight))
-					nRight = false;
-				if(marker.GetLocation().Equals(nextLeft))
-					nLeft = false;
-			}
+			IsVisited(currentRight, nextRight, currentLeft, nextLeft, movesCopy);
+			IsOutsideGameArea(currentRight, nextRight, currentLeft, nextLeft, _area);
+			IsOnSnake(currentRight, nextRight, currentLeft, nextLeft, _snakeClone);
 
-			for(int j = 1; j < _snakeClone.size() - 1; j++)
-			{
-				if(_snakeClone[j].GetLocation().Equals(currentRight))
-					curRight = false;
-				if(_snakeClone[j].GetLocation().Equals(currentLeft))
-					curLeft = false;
-				if(_snakeClone[j].GetLocation().Equals(nextRight))
-					nRight = false;
-				if(_snakeClone[j].GetLocation().Equals(nextLeft))
-					nLeft = false;
-			}
-
-			if(currentRight.GetX() <= 0 || currentRight.GetX() > _area.GetGridSize() || currentRight.GetY() <= 0 || currentRight.GetY() > _area.GetGridSize())
-				curRight = false;
-			if(currentLeft.GetX() <= 0 || currentLeft.GetX() > _area.GetGridSize() || currentLeft.GetY() <= 0 || currentLeft.GetY() > _area.GetGridSize())
-				curLeft = false;
-			if(nextRight.GetX() <= 0 || nextRight.GetX() > _area.GetGridSize() || nextRight.GetY() <= 0 || nextRight.GetY() > _area.GetGridSize())
-				nRight = false;
-			if(nextLeft.GetX() <= 0 || nextLeft.GetX() > _area.GetGridSize() || nextLeft.GetY() <= 0 || nextLeft.GetY() > _area.GetGridSize())
-				nLeft = false;
-
-			if(curRight && nRight)
+			if(!currentRight.isVisited && !nextRight.isVisited)
 			{
 				movesCopy.erase(movesCopy.begin() + i);
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentRight.Add(dir.Add(directions.Left)), _area)));
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentRight.Add(dir), _area)));
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentRight, _area));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentRight.location.Add(dir.Add(directions.Left)), _area)));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentRight.location.Add(dir), _area)));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentRight.location, _area));
 				extended = true;
 			}
-			else if(curLeft && nLeft)
+			else if(!currentLeft.isVisited && !nextLeft.isVisited)
 			{
 				movesCopy.erase(movesCopy.begin() + i);
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentLeft.Add(dir.Add(directions.Right)), _area)));
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentLeft.Add(dir), _area)));
-				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentLeft, _area));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentLeft.location.Add(dir.Add(directions.Right)), _area)));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentLeft.location.Add(dir), _area)));
+				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentLeft.location, _area));
 				extended = true;
 			}
 		}
@@ -159,4 +100,46 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, std::vector<S
 	{
 		moves.insert(moves.begin(), movesCopy[i]);
 	}
+}
+
+void HamiltonianCycle::IsVisited(Node& _cUpRight, Node& _nUpRight, Node& _cDownLeft, Node& _nDownLeft, std::vector<PathMarker>& _movesCopy)
+{
+	for(PathMarker marker : _movesCopy)
+	{
+		if(marker.GetLocation().Equals(_cUpRight.location))
+			_cUpRight.isVisited = true;
+		if(marker.GetLocation().Equals(_nUpRight.location))
+			_nUpRight.isVisited = true;
+		if(marker.GetLocation().Equals(_cDownLeft.location))
+			_cDownLeft.isVisited = true;
+		if(marker.GetLocation().Equals(_nDownLeft.location))
+			_nDownLeft.isVisited = true;
+	}
+}
+
+void HamiltonianCycle::IsOnSnake(Node& _cUpRight, Node& _nUpRight, Node& _cDownLeft, Node& _nDownLeft, std::vector<SnakePart>& _snakeClone)
+{
+	for(int j = 1; j < _snakeClone.size() - 1; j++)
+	{
+		if(_snakeClone[j].GetLocation().Equals(_cUpRight.location))
+			_cUpRight.isVisited = true;
+		if(_snakeClone[j].GetLocation().Equals(_nUpRight.location))
+			_nUpRight.isVisited = true;
+		if(_snakeClone[j].GetLocation().Equals(_cDownLeft.location))
+			_cDownLeft.isVisited = true;
+		if(_snakeClone[j].GetLocation().Equals(_nDownLeft.location))
+			_nDownLeft.isVisited = true;
+	}
+}
+
+void HamiltonianCycle::IsOutsideGameArea(Node& _cUpRight, Node& _nUpRight, Node& _cDownLeft, Node& _nDownLeft, GameArea& _area)
+{
+	if(_cUpRight.location.GetY() > _area.GetGridSize() || _cUpRight.location.GetX() > _area.GetGridSize())
+		_cUpRight.isVisited = true;
+	if(_nUpRight.location.GetY() > _area.GetGridSize() || _nUpRight.location.GetX() > _area.GetGridSize())
+		_nUpRight.isVisited = true;
+	if(_cDownLeft.location.GetY() <= 0 || _cDownLeft.location.GetX() <= 0)
+		_cDownLeft.isVisited = true;
+	if(_nDownLeft.location.GetY() <= 0 || _nDownLeft.location.GetX() <= 0)
+		_nDownLeft.isVisited = true;
 }

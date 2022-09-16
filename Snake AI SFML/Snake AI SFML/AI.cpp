@@ -28,7 +28,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 		snakeClone.clear();
 		snakeClone.push_back(snakeCloneClone);
 
-		// Find the longest path to tail
+		// Check if longest path to tail exist
 		HamiltonianCycle hamiltonianCycle(snakeCloneClone, _area, snakeClone);
 		if(hamiltonianCycle.GetMoves().size() == 0)
 			movesCopy.clear();
@@ -46,6 +46,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 		movesCopy = hamiltonianCycle.GetMoves();
 	}
 
+	// Choose a safe default move
 	if(movesCopy.size() == 0)
 		DefaultMove(move, _snake, _food, _area);
 
