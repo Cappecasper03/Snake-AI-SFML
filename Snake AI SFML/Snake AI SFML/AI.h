@@ -22,5 +22,7 @@ private:
 
 	std::vector<std::vector<SnakePart>> snakeClone;
 	std::vector<PathMarker> moves;
+
+	bool foundFastPath;
 };
 

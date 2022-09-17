@@ -4,7 +4,7 @@ GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
 	area(20, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
-	FixedUpdateTime(.0f),
+	FixedUpdateTime(.05f),
 	state(GameStates::Playing),
 	moveDirection(),
 	food(area)
