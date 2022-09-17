@@ -66,3 +66,5 @@ local.properties
 *.gxp
 *.iobj
 *.ipdb
+
+x64/
