@@ -119,17 +119,14 @@ void HamiltonianCycle::IsVisited(Node& _cUpRight, Node& _nUpRight, Node& _cDownL
 
 void HamiltonianCycle::IsOnSnake(Node& _cUpRight, Node& _nUpRight, Node& _cDownLeft, Node& _nDownLeft, std::vector<SnakePart>& _snakeClone)
 {
-	for(int j = 1; j < _snakeClone.size() - 1; j++)
-	{
-		if(_snakeClone[j].GetLocation().Equals(_cUpRight.location))
-			_cUpRight.isVisited = true;
-		if(_snakeClone[j].GetLocation().Equals(_nUpRight.location))
-			_nUpRight.isVisited = true;
-		if(_snakeClone[j].GetLocation().Equals(_cDownLeft.location))
-			_cDownLeft.isVisited = true;
-		if(_snakeClone[j].GetLocation().Equals(_nDownLeft.location))
-			_nDownLeft.isVisited = true;
-	}
+	if(std::find(_snakeClone.begin() + 1, _snakeClone.end() - 1, _cUpRight.location) != _snakeClone.end() - 1)
+		_cUpRight.isVisited = true;
+	if(std::find(_snakeClone.begin() + 1, _snakeClone.end() - 1, _nUpRight.location) != _snakeClone.end() - 1)
+		_nUpRight.isVisited = true;
+	if(std::find(_snakeClone.begin() + 1, _snakeClone.end() - 1, _cDownLeft.location) != _snakeClone.end() - 1)
+		_cDownLeft.isVisited = true;
+	if(std::find(_snakeClone.begin() + 1, _snakeClone.end() - 1, _nDownLeft.location) != _snakeClone.end() - 1)
+		_nDownLeft.isVisited = true;
 }
 
 void HamiltonianCycle::IsOutsideGameArea(Node& _cUpRight, Node& _nUpRight, Node& _cDownLeft, Node& _nDownLeft, GameArea& _area)

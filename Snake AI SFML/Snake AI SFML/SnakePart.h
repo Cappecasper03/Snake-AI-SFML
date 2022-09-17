@@ -5,14 +5,17 @@
 #include "SFML/Graphics.hpp"
 #include "GridLocation.h"
 #include "GameArea.h"
+#include "PathMarker.h"
 
 class SnakePart
 {
 public:
 	SnakePart(GridLocation _location, GameArea& _area, float _percentOfTile);
-	~SnakePart(){};
+	~SnakePart() {};
 
 	void Move(GridLocation _locationOrDir, GameArea& _area);
+
+	bool operator==(GridLocation _other) { return location == _other; }
 
 	GridLocation GetLocation() { return location; }
 	sf::RectangleShape& GetVisual() { return visual; }
