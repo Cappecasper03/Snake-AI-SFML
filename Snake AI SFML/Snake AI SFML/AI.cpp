@@ -12,7 +12,7 @@ AI::AI() :
 {
 }
 
-GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea& _area)
+GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 {
 	HamiltonianCycle hamiltonianCycle;
 	std::vector<PathMarker> movesCopy;
@@ -23,15 +23,15 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 	if(!foundFastPath)
 	{
 		// Find the shortest path to food unless the snake fills up 50% of the area
-		if(_snake.size() <= _area.GetGridSize() * _area.GetGridSize() * .5f)
+		if(_snake.GetSnake().size() <= _area.GetGridSize() * _area.GetGridSize() * .5f)
 		{
-			AStar aStarFood(_snake[0].GetLocation(), _food, _area, snakeClone);
+			AStar aStarFood(_snake.GetHead().GetLocation(), _food, _area, snakeClone);
 			movesCopy = aStarFood.GetMoves();
 
-			if(aStarFood.HasFoundPath() && _snake.size() >= 3)
+			if(aStarFood.HasFoundPath() && _snake.GetSnake().size() >= 3)
 			{
-				std::vector<SnakePart> snakeCloneClone(snakeClone[0]);
-				snakeCloneClone.push_back(snakeCloneClone[snakeCloneClone.size() - 1]); // Add 1 part because it has "eaten" the food
+				Snake snakeCloneClone(snakeClone[0]);
+				snakeCloneClone.GetSnake().push_back(snakeCloneClone.GetTail()); // Add 1 part because it has "eaten" the food
 
 				snakeClone.clear();
 				snakeClone.push_back(snakeCloneClone);
@@ -44,15 +44,15 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 				else
 					foundFastPath = true;
 			}
-			else if(aStarFood.HasFoundPath() && _snake.size() < 3)
+			else if(aStarFood.HasFoundPath() && _snake.GetSnake().size() < 3)
 				foundFastPath = true;
 		}
 
 		if(!foundFastPath)
 		{
-			//TODO Should be first in the function (Causes memory problems if it is, Multiple A*)
+			//TODO Should be first in the function (Causes memory problems if it is, Multiple A* at the same time)
 			// Find the longest path to tail
-			std::vector<std::vector<SnakePart>> sSnakeClone;
+			std::vector<Snake> sSnakeClone;
 			sSnakeClone.push_back(_snake);
 			std::vector<PathMarker> sMovesCopy;
 			std::thread hamiltonianCycleThread(&HamiltonianCycle::GetMoves, hamiltonianCycle, _snake, std::ref(_area), std::ref(sSnakeClone), std::ref(sMovesCopy));
@@ -62,14 +62,14 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 
 		// Choose a safe default move
 		if(!foundFastPath && movesCopy.size() == 0)
-			DefaultMove(move, _snake, _food, _area);
+			DefaultMove(move, _snake.GetSnake(), _food, _area);
 
 		moves = movesCopy;
 	}
 
 	if(moves.size() != 0)
 	{
-		move = _snake[0].GetLocation().GetDirectionTo(moves[moves.size() - 1].GetLocation());
+		move = _snake.GetHead().GetLocation().GetDirectionTo(moves[moves.size() - 1].GetLocation());
 		moves.erase(moves.end() - 1);
 
 		if(moves.size() == 0)

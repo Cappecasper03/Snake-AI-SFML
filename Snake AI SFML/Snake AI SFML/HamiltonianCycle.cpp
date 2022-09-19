@@ -5,9 +5,9 @@ HamiltonianCycle::HamiltonianCycle()
 {
 }
 
-void HamiltonianCycle::GetMoves(std::vector<SnakePart> _snake, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones, std::vector<PathMarker>& _moves)
+void HamiltonianCycle::GetMoves(Snake _snake, GameArea& _area, std::vector<Snake>& _snakeClones, std::vector<PathMarker>& _moves)
 {
-	AStar aStarTail(_snake[0].GetLocation(), _snake[_snake.size() - 1].GetLocation(), _area, _snakeClones);
+	AStar aStarTail(_snake.GetHead().GetLocation(), _snake.GetTail().GetLocation(), _area, _snakeClones);
 
 	moves = aStarTail.GetMoves();
 	ExtendPath(moves, _snake, _area);
@@ -15,12 +15,12 @@ void HamiltonianCycle::GetMoves(std::vector<SnakePart> _snake, GameArea& _area, 
 	_moves = moves;
 }
 
-void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, std::vector<SnakePart>& _snakeClone, GameArea& _area)
+void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snakeClone, GameArea& _area)
 {
 	Directions directions;
 
 	std::vector<PathMarker> movesCopy;
-	movesCopy.push_back(PathMarker(_snakeClone[0].GetLocation(), _area));
+	movesCopy.push_back(PathMarker(_snakeClone.GetHead().GetLocation(), _area));
 	for(int i = (int)_moves.size() - 1; i >= 0; i--)
 	{
 		movesCopy.push_back(_moves[i]);
@@ -126,15 +126,15 @@ void HamiltonianCycle::IsVisited(Node& _cUpRight, Node& _nUpRight, Node& _cDownL
 		_nDownLeft.isVisited = true;
 }
 
-void HamiltonianCycle::IsOnSnake(Node& _cUpRight, Node& _nUpRight, Node& _cDownLeft, Node& _nDownLeft, std::vector<SnakePart>& _snakeClone)
+void HamiltonianCycle::IsOnSnake(Node& _cUpRight, Node& _nUpRight, Node& _cDownLeft, Node& _nDownLeft, Snake& _snakeClone)
 {
-	if(std::find(_snakeClone.begin() + 1, _snakeClone.end() - 1, _cUpRight.location) != _snakeClone.end() - 1)
+	if(std::find(_snakeClone.GetSnake().begin() + 1, _snakeClone.GetSnake().end() - 1, _cUpRight.location) != _snakeClone.GetSnake().end() - 1)
 		_cUpRight.isVisited = true;
-	if(std::find(_snakeClone.begin() + 1, _snakeClone.end() - 1, _nUpRight.location) != _snakeClone.end() - 1)
+	if(std::find(_snakeClone.GetSnake().begin() + 1, _snakeClone.GetSnake().end() - 1, _nUpRight.location) != _snakeClone.GetSnake().end() - 1)
 		_nUpRight.isVisited = true;
-	if(std::find(_snakeClone.begin() + 1, _snakeClone.end() - 1, _cDownLeft.location) != _snakeClone.end() - 1)
+	if(std::find(_snakeClone.GetSnake().begin() + 1, _snakeClone.GetSnake().end() - 1, _cDownLeft.location) != _snakeClone.GetSnake().end() - 1)
 		_cDownLeft.isVisited = true;
-	if(std::find(_snakeClone.begin() + 1, _snakeClone.end() - 1, _nDownLeft.location) != _snakeClone.end() - 1)
+	if(std::find(_snakeClone.GetSnake().begin() + 1, _snakeClone.GetSnake().end() - 1, _nDownLeft.location) != _snakeClone.GetSnake().end() - 1)
 		_nDownLeft.isVisited = true;
 }
 

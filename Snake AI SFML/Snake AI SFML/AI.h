@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Snake.h"
 #include "SnakePart.h"
 #include "GridLocation.h"
 #include "GameArea.h"
@@ -13,14 +14,14 @@ public:
 	AI();
 	~AI() {};
 
-	GridLocation GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea& _area);
+	GridLocation GetNextMove(Snake _snake, GridLocation _food, GameArea& _area);
 	void ClearMoves() { moves.clear(); }
 	std::vector<PathMarker>& GetPath() { return moves; }
 
 private:
 	void DefaultMove(GridLocation& _move, std::vector<SnakePart>& _snake, GridLocation& _food, GameArea& _area);
 
-	std::vector<std::vector<SnakePart>> snakeClone;
+	std::vector<Snake> snakeClone;
 	std::vector<PathMarker> moves;
 
 	bool foundFastPath;

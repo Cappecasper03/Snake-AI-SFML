@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones) :
+AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, std::vector<Snake>& _snakeClones) :
 	open(),
 	closed(),
 	startNode(_startNode, 0, 0, 0, nullptr),
@@ -16,8 +16,8 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 	open.push_back(startNode);
 
 	// Avoid running into the tail by making it think it is 1 part longer than it actually is
-	std::vector<SnakePart>& temp = _snakeClones[_snakeClones.size() - 1];
-	temp.push_back(temp[temp.size() - 1]);
+	Snake& temp = _snakeClones[_snakeClones.size() - 1];
+	temp.GetSnake().push_back(temp.GetSnake()[temp.GetSnake().size() - 1]);
 
 	do
 	{
@@ -41,7 +41,7 @@ AStar::~AStar()
 	}
 }
 
-void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones)
+void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>& _snakeClones)
 {
 	if(_playerNode.Equals(goalNode)) // Found the best path
 	{
@@ -51,9 +51,9 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		for(int i = 0; i < _snakeClones.size(); i++)
 		{
 			// Removes all snakeClones except the one that got the food
-			if(_snakeClones[i][0].GetLocation().ToVector() == goalNode.GetLocation().ToVector())
+			if(_snakeClones[i].GetHead().GetLocation().ToVector() == goalNode.GetLocation().ToVector())
 			{
-				std::vector<std::vector<SnakePart>> temp;
+				std::vector<Snake> temp;
 				temp.push_back(_snakeClones[i]);
 				_snakeClones.clear();
 				_snakeClones.push_back(temp[0]);
@@ -70,14 +70,14 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 
 		int currentSnake = 0;
 		// Makes sure we don't move the snake when we look for the tail
-		if(!_snakeClones[0][_snakeClones[0].size() - 1].GetLocation().Equals(goalNode.GetLocation()))
+		if(!_snakeClones[0].GetTail().GetLocation().Equals(goalNode.GetLocation()))
 		{
 			for(int i = 0; i < _snakeClones.size(); i++) //TODO Slow, needs to become faster
 			{
 				// Finds the current position and makes a copy to move
-				if(_snakeClones[i][0].GetLocation().ToVector() == _playerNode.GetLocation().ToVector())
+				if(_snakeClones[i].GetHead().GetLocation().ToVector() == _playerNode.GetLocation().ToVector())
 				{
-					_snakeClones.push_back(std::vector<SnakePart>(_snakeClones[i]));
+					_snakeClones.push_back(Snake(_snakeClones[i]));
 					MoveSnakeClone(dir, _area, _snakeClones[_snakeClones.size() - 1]);
 					currentSnake = i;
 					break;
@@ -96,7 +96,7 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 			continue;
 
 		bool hitsItself = false;
-		for(SnakePart part : _snakeClones[currentSnake])
+		for(SnakePart part : _snakeClones[currentSnake].GetSnake())
 		{
 			// If the 'neighbourNode' is one the snake
 			if(!neighbourNode.Equals(startNode.GetLocation()) && neighbourNode.Equals(part.GetLocation()))
@@ -185,11 +185,11 @@ void AStar::GetPath(PathMarker* _lastPos, GameArea& _area)
 	}
 }
 
-void AStar::MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, std::vector<SnakePart>& _snakeClone)
+void AStar::MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, Snake& _snakeClone)
 {
-	for(size_t i = _snakeClone.size() - 1; i > 0; i--)
+	for(size_t i = _snakeClone.GetSnake().size() - 1; i > 0; i--)
 	{
-		_snakeClone[i].Move(_snakeClone[i - 1].GetLocation(), _area);
+		_snakeClone.GetSnake()[i].Move(_snakeClone.GetSnake()[i - 1].GetLocation(), _area);
 	}
-	_snakeClone[0].Move(_moveDirection, _area);
+	_snakeClone.GetHead().Move(_moveDirection, _area);
 }

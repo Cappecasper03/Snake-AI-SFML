@@ -4,6 +4,7 @@
 
 #include "PathMarker.h"
 #include "GameArea.h"
+#include "Snake.h"
 #include "SnakePart.h"
 #include "GridLocation.h"
 
@@ -18,18 +19,18 @@ struct Directions // Stores the predefined values for all directions
 class AStar
 {
 public:
-	AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones);
+	AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, std::vector<Snake>& _snakeClones);
 	~AStar();
 
 	std::vector<PathMarker>& GetMoves() { return moves; };
 	bool HasFoundPath() { return foundPath; }
 
 private:
-	void Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones);
+	void Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>& _snakeClones);
 	bool UpdateMarker(GridLocation _position, float _g, float _h, float _f, PathMarker* _parent);
 	bool IsClosed(GridLocation _location);
 	void GetPath(PathMarker* _lastPos, GameArea& _area);
-	void MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, std::vector<SnakePart>& _snakeClone);
+	void MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, Snake& _snakeClone);
 
 	std::vector<PathMarker> open; // Stores the pathmarkers that hasn't been visited
 	std::vector<PathMarker> closed; // Stores all the visited pathmarkers

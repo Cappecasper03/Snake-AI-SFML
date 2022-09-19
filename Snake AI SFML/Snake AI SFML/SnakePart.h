@@ -16,6 +16,7 @@ public:
 	void Move(GridLocation _locationOrDir, GameArea& _area);
 
 	bool operator==(GridLocation _other) { return location == _other; }
+	bool operator==(SnakePart _other) { return location == _other.location; }
 
 	GridLocation GetLocation() { return location; }
 	sf::RectangleShape& GetVisual() { return visual; }

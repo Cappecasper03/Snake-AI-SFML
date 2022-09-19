@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 #include "GridLocation.h"
 #include "GameArea.h"
+#include "Snake.h"
 #include "SnakePart.h"
 #include "Food.h"
 #include "AI.h"
@@ -30,8 +31,6 @@ public:
 	~GameManager() {};
 
 	void Update(sf::Time _deltaTime);
-	void Move();
-	void Grow() { snake.push_back(SnakePart(snake[snake.size() - 1].GetLocation(), area, .5f)); }
 	void CheckCollision();
 
 	bool IsWindowOpen() { return window.isOpen(); }
@@ -46,7 +45,7 @@ private:
 
 	GameArea area; // Stores the game area information
 	AI player; // Controls the snake
-	std::vector<SnakePart> snake; // Controls the snake
+	Snake snake; // Controls the snake
 	GridLocation moveDirection; // Stores the current direction to move in
 	Food food; // Controls the food
 
