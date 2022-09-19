@@ -63,6 +63,9 @@ GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 		if(!foundFastPath)
 		{
 			HamiltonianCycle hamiltonianCycle;
+			movesCopy.clear();
+			snakeClone.clear();
+			snakeClone.push_back(_snake);
 			hamiltonianCycle.GetMoves(_snake, _area, snakeClone, movesCopy);
 		}
 
