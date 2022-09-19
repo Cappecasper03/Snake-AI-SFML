@@ -15,10 +15,10 @@ struct Node
 class HamiltonianCycle
 {
 public:
-	HamiltonianCycle(std::vector<SnakePart> _snake, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones);
+	HamiltonianCycle();
 	~HamiltonianCycle() {};
 
-	std::vector<PathMarker>& GetMoves() { return moves; };
+	void GetMoves(std::vector<SnakePart> _snake, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones, std::vector<PathMarker>& _moves);
 
 private:
 	void ExtendPath(std::vector<PathMarker>& _moves, std::vector<SnakePart>& _snakeClone, GameArea& _area);

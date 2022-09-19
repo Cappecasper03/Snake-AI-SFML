@@ -10,7 +10,6 @@ int main()
 	{
 		game.Update(clock.restart());
 	}
-	//TODO Delete all timers except in main.cpp
 
 	return 0;
 }

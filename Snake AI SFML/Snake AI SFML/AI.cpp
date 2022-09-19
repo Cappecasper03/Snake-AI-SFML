@@ -3,6 +3,7 @@
 #include "HamiltonianCycle.h"
 
 #include <math.h>
+#include <thread>
 
 AI::AI() :
 	moves(),
@@ -13,56 +14,58 @@ AI::AI() :
 
 GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, GameArea& _area)
 {
+	HamiltonianCycle hamiltonianCycle;
 	std::vector<PathMarker> movesCopy;
 	GridLocation move;
 	snakeClone.clear();
 	snakeClone.push_back(_snake);
 
-	// Find the shortest path to food unless the snake fills up 50% of the area
-	if(!foundFastPath && _snake.size() <= _area.GetGridSize() * _area.GetGridSize() * .5f)
-	{
-		sf::Clock clock;
-		AStar aStarFood(_snake[0].GetLocation(), _food, _area, snakeClone);
-		sf::Time time = clock.restart();
-		int milli = time.asMilliseconds();
-		movesCopy = aStarFood.GetMoves();
-
-		if(aStarFood.HasFoundPath() && _snake.size() >= 3)
-		{
-			std::vector<SnakePart> snakeCloneClone(snakeClone[0]);
-			snakeCloneClone.push_back(snakeCloneClone[snakeCloneClone.size() - 1]); // Add 1 part because it has "eaten" the food
-
-			snakeClone.clear();
-			snakeClone.push_back(snakeCloneClone);
-
-			// Check if longest path to tail exist
-			HamiltonianCycle hamiltonianCycle(snakeCloneClone, _area, snakeClone);
-			if(hamiltonianCycle.GetMoves().size() == 0)
-				movesCopy.clear();
-			else
-			{
-				moves = movesCopy;
-				foundFastPath = true;
-			}
-		}
-	}
-
-	if(!foundFastPath && movesCopy.size() == 0)
-	{
-		snakeClone.clear();
-		snakeClone.push_back(_snake);
-
-		// Find the longest path to tail
-		HamiltonianCycle hamiltonianCycle(_snake, _area, snakeClone);
-		movesCopy = hamiltonianCycle.GetMoves();
-	}
-
-	// Choose a safe default move
-	if(!foundFastPath && movesCopy.size() == 0)
-		DefaultMove(move, _snake, _food, _area);
-
 	if(!foundFastPath)
+	{
+		// Find the shortest path to food unless the snake fills up 50% of the area
+		if(_snake.size() <= _area.GetGridSize() * _area.GetGridSize() * .5f)
+		{
+			AStar aStarFood(_snake[0].GetLocation(), _food, _area, snakeClone);
+			movesCopy = aStarFood.GetMoves();
+
+			if(aStarFood.HasFoundPath() && _snake.size() >= 3)
+			{
+				std::vector<SnakePart> snakeCloneClone(snakeClone[0]);
+				snakeCloneClone.push_back(snakeCloneClone[snakeCloneClone.size() - 1]); // Add 1 part because it has "eaten" the food
+
+				snakeClone.clear();
+				snakeClone.push_back(snakeCloneClone);
+
+				// Check if longest path to tail exist
+				std::vector<PathMarker> tempMoves;
+				hamiltonianCycle.GetMoves(snakeCloneClone, _area, snakeClone, tempMoves);
+				if(tempMoves.size() == 0)
+					movesCopy.clear();
+				else
+					foundFastPath = true;
+			}
+			else if(aStarFood.HasFoundPath() && _snake.size() < 3)
+				foundFastPath = true;
+		}
+
+		if(!foundFastPath)
+		{
+			//TODO Should be first in the function (Causes memory problems if it is, Multiple A*)
+			// Find the longest path to tail
+			std::vector<std::vector<SnakePart>> sSnakeClone;
+			sSnakeClone.push_back(_snake);
+			std::vector<PathMarker> sMovesCopy;
+			std::thread hamiltonianCycleThread(&HamiltonianCycle::GetMoves, hamiltonianCycle, _snake, std::ref(_area), std::ref(sSnakeClone), std::ref(sMovesCopy));
+			hamiltonianCycleThread.join();
+			movesCopy = sMovesCopy;
+		}
+
+		// Choose a safe default move
+		if(!foundFastPath && movesCopy.size() == 0)
+			DefaultMove(move, _snake, _food, _area);
+
 		moves = movesCopy;
+	}
 
 	if(moves.size() != 0)
 	{

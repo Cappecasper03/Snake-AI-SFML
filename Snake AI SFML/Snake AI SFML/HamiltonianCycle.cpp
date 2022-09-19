@@ -1,19 +1,18 @@
 #include "HamiltonianCycle.h"
 #include "AStar.h"
 
-HamiltonianCycle::HamiltonianCycle(std::vector<SnakePart> _snake, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones)
+HamiltonianCycle::HamiltonianCycle()
 {
-	sf::Clock clock;
+}
+
+void HamiltonianCycle::GetMoves(std::vector<SnakePart> _snake, GameArea& _area, std::vector<std::vector<SnakePart>>& _snakeClones, std::vector<PathMarker>& _moves)
+{
 	AStar aStarTail(_snake[0].GetLocation(), _snake[_snake.size() - 1].GetLocation(), _area, _snakeClones);
-	sf::Time time = clock.restart();
-	int milli = time.asMilliseconds();
 
 	moves = aStarTail.GetMoves();
-	clock.restart();
 	ExtendPath(moves, _snake, _area);
-	time = clock.restart();
-	milli = time.asMilliseconds();
-	milli = 0;
+
+	_moves = moves;
 }
 
 void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, std::vector<SnakePart>& _snakeClone, GameArea& _area)
@@ -107,7 +106,7 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, std::vector<S
 	{
 		moves = movesCopy;
 		moves.erase(moves.begin());
-		for(int i = moves.size() - 1; i >= 0; i--)
+		for(int i = (int)moves.size() - 1; i >= 0; i--)
 		{
 			movesCopy.push_back(moves[i]);
 		}

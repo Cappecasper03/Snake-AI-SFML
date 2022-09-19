@@ -64,15 +64,15 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		return;
 	}
 
-	sf::Clock clock;
-	for(GridLocation dir : directions) //TODO Slow, needs to become faster
+	for(GridLocation dir : directions)
 	{
 		GridLocation neighbourNode = dir.Add(_playerNode.GetLocation());
 
 		int currentSnake = 0;
+		// Makes sure we don't move the snake when we look for the tail
 		if(!_snakeClones[0][_snakeClones[0].size() - 1].GetLocation().Equals(goalNode.GetLocation()))
 		{
-			for(int i = 0; i < _snakeClones.size(); i++)
+			for(int i = 0; i < _snakeClones.size(); i++) //TODO Slow, needs to become faster
 			{
 				// Finds the current position and makes a copy to move
 				if(_snakeClones[i][0].GetLocation().ToVector() == _playerNode.GetLocation().ToVector())
@@ -130,7 +130,6 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 			open.push_back(PathMarker(neighbourNode, G, H, F, node));
 		}
 	}
-	sf::Time time = clock.restart();
 
 	if(open.size() == 0)
 	{
