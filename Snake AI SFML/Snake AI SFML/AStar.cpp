@@ -61,6 +61,19 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>&
 			}
 		}
 
+		// Removes all snakeClones except the one that got the food
+		/*Snake temp(SnakePart(goalNode.GetLocation()));
+		auto it = std::find(_snakeClones.begin(), _snakeClones.end(), temp);
+		int i = (int)std::distance(_snakeClones.begin(), it);
+
+		if(i != _snakeClones.size())
+		{
+			std::vector<Snake> temps;
+			temps.push_back(_snakeClones[i]);
+			_snakeClones.clear();
+			_snakeClones.push_back(temps[0]);
+		}*/
+
 		return;
 	}
 
@@ -83,6 +96,18 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>&
 					break;
 				}
 			}
+
+			// Finds the current position and makes a copy to move
+			/*Snake temp(SnakePart(_playerNode.GetLocation()));
+			auto it = std::find(_snakeClones.begin(), _snakeClones.end(), temp);
+			int i = (int)std::distance(_snakeClones.begin(), it);
+
+			if(i != _snakeClones.size())
+			{
+				_snakeClones.push_back(Snake(_snakeClones[i]));
+				MoveSnakeClone(dir, _area, _snakeClones[_snakeClones.size() - 1]);
+				currentSnake = (int)i;
+			}*/
 		}
 
 		// If the 'neighbourNode' is outside of the game area
@@ -113,6 +138,22 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>&
 				}
 			}
 		}
+
+		/*Snake temp(SnakePart(GridLocation(neighbourNode.GetX(), neighbourNode.GetX())));
+		if(std::find(_snakeClones.begin() + 1, _snakeClones.end(), temp) != _snakeClones.end())
+		{
+			// If the 'neighbourNode' is one the snake
+			if(currentSnake == 0 && !neighbourNode.Equals(goalNode.GetLocation()))
+			{
+				hitsItself = true;
+				break;
+			}
+			else if(currentSnake != 0)
+			{
+				hitsItself = true;
+				break;
+			}
+		}*/
 
 		if(hitsItself)
 			continue;
@@ -159,6 +200,16 @@ bool AStar::UpdateMarker(GridLocation _position, float _g, float _h, float _f, P
 		}
 	}
 
+	/*PathMarker temp(_position);
+	auto it = std::find(open.begin(), open.end(), temp);
+	int i = (int)std::distance(open.begin(), it);
+
+	if(i != open.size())
+	{
+		open[i].Update(_g, _h, _f, _parent);
+		return true;
+	}*/
+
 	return false;
 }
 
@@ -169,6 +220,10 @@ bool AStar::IsClosed(GridLocation _location)
 		if(marker.GetLocation().Equals(_location))
 			return true;
 	}
+
+	/*PathMarker temp(_location);
+	if(std::find(closed.begin(), closed.end(), temp) != closed.end())
+		return true;*/
 
 	return false;
 }

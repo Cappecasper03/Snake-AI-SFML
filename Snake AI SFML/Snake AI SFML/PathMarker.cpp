@@ -1,5 +1,14 @@
 #include "PathMarker.h"
 
+PathMarker::PathMarker(GridLocation _location) :
+	location(_location),
+	G(0),
+	H(0),
+	F(0),
+	parent(nullptr)
+{
+}
+
 PathMarker::PathMarker(GridLocation _location, GameArea& _area) :
 	location(_location),
 	G(0),

@@ -7,6 +7,7 @@
 class PathMarker
 {
 public:
+	PathMarker(GridLocation _location);
 	PathMarker(GridLocation _location, GameArea& _area);
 	PathMarker(GridLocation _location, float _g, float _h, float _f, PathMarker* _parent);
 	~PathMarker() {};
@@ -15,6 +16,7 @@ public:
 	void Update(float _g, float _h, float _f, PathMarker* _parent);
 
 	bool operator==(GridLocation _other) { return location == _other; }
+	bool operator==(PathMarker _other) { return location == _other.GetLocation(); }
 
 	GridLocation GetLocation() { return location; }
 	float GetG() { return G; }
