@@ -14,11 +14,22 @@ AI::AI() :
 
 GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 {
-	HamiltonianCycle hamiltonianCycle;
 	std::vector<PathMarker> movesCopy;
 	GridLocation move;
 	snakeClone.clear();
 	snakeClone.push_back(_snake);
+
+	/*
+	//TODO Should be first in the function (Causes memory problems if it is, Multiple A* at the same time)
+	// Find the longest path to tail
+	std::vector<Snake> sSnakeClone;
+	sSnakeClone.push_back(_snake);
+	std::vector<PathMarker> sMovesCopy;
+	HamiltonianCycle hamiltonianCycle;
+	std::thread hamiltonianCycleThread(&HamiltonianCycle::GetMoves, hamiltonianCycle, _snake, std::ref(_area), std::ref(sSnakeClone), std::ref(sMovesCopy));
+	hamiltonianCycleThread.join();
+	movesCopy = sMovesCopy;
+	*/
 
 	if(!foundFastPath)
 	{
@@ -38,6 +49,7 @@ GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 
 				// Check if longest path to tail exist
 				std::vector<PathMarker> tempMoves;
+				HamiltonianCycle hamiltonianCycle;
 				hamiltonianCycle.GetMoves(snakeCloneClone, _area, snakeClone, tempMoves);
 				if(tempMoves.size() == 0)
 					movesCopy.clear();
@@ -50,14 +62,8 @@ GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 
 		if(!foundFastPath)
 		{
-			//TODO Should be first in the function (Causes memory problems if it is, Multiple A* at the same time)
-			// Find the longest path to tail
-			std::vector<Snake> sSnakeClone;
-			sSnakeClone.push_back(_snake);
-			std::vector<PathMarker> sMovesCopy;
-			std::thread hamiltonianCycleThread(&HamiltonianCycle::GetMoves, hamiltonianCycle, _snake, std::ref(_area), std::ref(sSnakeClone), std::ref(sMovesCopy));
-			hamiltonianCycleThread.join();
-			movesCopy = sMovesCopy;
+			HamiltonianCycle hamiltonianCycle;
+			hamiltonianCycle.GetMoves(_snake, _area, snakeClone, movesCopy);
 		}
 
 		// Choose a safe default move
