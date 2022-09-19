@@ -18,7 +18,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 	snakeClone.clear();
 	snakeClone.push_back(_snake);
 
-	// Find the shortest path to food
+	// Find the shortest path to food unless the snake fills up 50% of the area
 	if(!foundFastPath && _snake.size() <= _area.GetGridSize() * _area.GetGridSize() * .5f)
 	{
 		sf::Clock clock;
@@ -36,10 +36,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 			snakeClone.push_back(snakeCloneClone);
 
 			// Check if longest path to tail exist
-			time = clock.restart();
 			HamiltonianCycle hamiltonianCycle(snakeCloneClone, _area, snakeClone);
-			time = clock.restart();
-			milli = time.asMilliseconds();
 			if(hamiltonianCycle.GetMoves().size() == 0)
 				movesCopy.clear();
 			else
@@ -56,10 +53,7 @@ GridLocation AI::GetNextMove(std::vector<SnakePart> _snake, GridLocation _food, 
 		snakeClone.push_back(_snake);
 
 		// Find the longest path to tail
-		sf::Clock clock;
 		HamiltonianCycle hamiltonianCycle(_snake, _area, snakeClone);
-		sf::Time time = clock.restart();
-		int milli = time.asMilliseconds();
 		movesCopy = hamiltonianCycle.GetMoves();
 	}
 

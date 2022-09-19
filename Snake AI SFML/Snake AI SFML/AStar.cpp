@@ -64,7 +64,8 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 		return;
 	}
 
-	for(GridLocation dir : directions)
+	sf::Clock clock;
+	for(GridLocation dir : directions) //TODO Slow, needs to become faster
 	{
 		GridLocation neighbourNode = dir.Add(_playerNode.GetLocation());
 
@@ -129,6 +130,7 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<std::ve
 			open.push_back(PathMarker(neighbourNode, G, H, F, node));
 		}
 	}
+	sf::Time time = clock.restart();
 
 	if(open.size() == 0)
 	{
