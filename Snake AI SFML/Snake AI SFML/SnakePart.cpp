@@ -1,5 +1,11 @@
 #include "SnakePart.h"
 
+SnakePart::SnakePart(GridLocation _location) :
+	location(_location),
+	visual()
+{
+
+}
 SnakePart::SnakePart(GridLocation _location, GameArea& _area, float _percentOfTile) :
 	location(_location)
 {

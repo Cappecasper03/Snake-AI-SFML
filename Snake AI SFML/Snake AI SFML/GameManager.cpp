@@ -58,8 +58,8 @@ void GameManager::CheckCollision()
 	}
 
 	// If the snake head is outside the border walls
-	if(snake.GetSnake()[0].GetLocation().GetX() <= 0 || snake.GetSnake()[0].GetLocation().GetX() > area.GetGridSize() ||
-		snake.GetSnake()[0].GetLocation().GetY() <= 0 || snake.GetSnake()[0].GetLocation().GetY() > area.GetGridSize())
+	if(snake.GetHead().GetLocation().GetX() <= 0 || snake.GetHead().GetLocation().GetX() > area.GetGridSize() ||
+		snake.GetHead().GetLocation().GetY() <= 0 || snake.GetHead().GetLocation().GetY() > area.GetGridSize())
 	{
 		state = GameStates::Lost;
 	}
@@ -68,7 +68,7 @@ void GameManager::CheckCollision()
 		for(int i = 2; i < snake.GetSnake().size(); i++) // i = 2 because the head can't be on the first body part or itself
 		{
 			// If the snake head is on it's body
-			if(snake.GetSnake()[0].GetLocation().Equals(snake.GetSnake()[i].GetLocation()))
+			if(snake.GetHead().GetLocation().Equals(snake.GetSnake()[i].GetLocation()))
 			{
 				state = GameStates::Lost;
 			}

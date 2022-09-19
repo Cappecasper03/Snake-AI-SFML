@@ -15,7 +15,7 @@ public:
 	void Move(GridLocation& _moveDirection, GameArea& _area);
 	void Grow(GameArea& _area) { snake.push_back(SnakePart(snake[snake.size() - 1].GetLocation(), _area, .5f)); }
 
-	bool operator==(std::vector<SnakePart> _other) { return snake[0].GetLocation() == _other[0].GetLocation(); }
+	bool operator==(Snake _other) { return GetHead() == _other.GetHead(); }
 
 	std::vector<SnakePart>& GetSnake() { return snake; }
 	SnakePart& GetHead() { return snake[0]; }

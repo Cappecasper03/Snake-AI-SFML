@@ -10,6 +10,7 @@
 class SnakePart
 {
 public:
+	SnakePart(GridLocation _location);
 	SnakePart(GridLocation _location, GameArea& _area, float _percentOfTile);
 	~SnakePart() {};
 
