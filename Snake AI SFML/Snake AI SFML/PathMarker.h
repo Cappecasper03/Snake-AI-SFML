@@ -12,7 +12,7 @@ public:
 	PathMarker(GridLocation _location, float _g, float _h, float _f, PathMarker* _parent);
 	~PathMarker() {};
 
-	bool Equals(PathMarker& _pathmarker) { return location.Equals(_pathmarker.location); }
+	bool Equals(PathMarker& _pathmarker) { return location.Equals(_pathmarker.GetLocation()); }
 	void Update(float _g, float _h, float _f, PathMarker* _parent);
 
 	bool operator==(GridLocation _other) { return location == _other; }

@@ -16,7 +16,7 @@ public:
 
 	GridLocation GetDirectionTo(GridLocation _to) { return GridLocation(_to.GetX() - x, _to.GetY() - y); }
 	sf::Vector2f ToVector() { return sf::Vector2f((float)x, (float)y); }
-	bool Equals(GridLocation _location) { return _location.ToVector() == ToVector(); }
+	bool Equals(GridLocation _other) { return ToVector() == _other.ToVector(); }
 
 	int GetX() { return x; }
 	int GetY() { return y; }
