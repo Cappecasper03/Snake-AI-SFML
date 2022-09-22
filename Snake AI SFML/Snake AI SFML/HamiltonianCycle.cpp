@@ -106,6 +106,7 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 	{
 		moves = movesCopy;
 		moves.erase(moves.begin());
+		movesCopy.clear();
 		for(int i = (int)moves.size() - 1; i >= 0; i--)
 		{
 			movesCopy.push_back(moves[i]);
