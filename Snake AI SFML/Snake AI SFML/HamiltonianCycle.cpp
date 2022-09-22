@@ -102,7 +102,7 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 	}
 
 	moves.clear();
-	if(movesCopy.size() > 1)
+	if(movesCopy.size() > 2)
 	{
 		moves = movesCopy;
 		moves.erase(moves.begin());

@@ -84,20 +84,6 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>&
 					break;
 				}
 			}
-
-			/*
-			// Finds the current position and makes a copy to move
-			Snake temp(SnakePart(_playerNode.GetLocation()));
-			auto it = std::find(_snakeClones.begin(), _snakeClones.end(), temp);
-			int i = (int)std::distance(_snakeClones.begin(), it);
-
-			if(i != _snakeClones.size())
-			{
-				_snakeClones.push_back(Snake(_snakeClones[i]));
-				MoveSnakeClone(dir, _area, _snakeClones[_snakeClones.size() - 1]);
-				currentSnake = (int)i;
-			}
-			*/
 		}
 
 		// If the 'neighbourNode' is outside of the game area

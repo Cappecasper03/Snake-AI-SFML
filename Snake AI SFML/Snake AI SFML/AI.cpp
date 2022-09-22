@@ -19,20 +19,17 @@ GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 	snakeClone.clear();
 	snakeClone.push_back(_snake);
 
-	/*
-	//TODO Should be first in the function (Causes memory problems if it is, Multiple A* at the same time)
-	// Find the longest path to tail
-	std::vector<Snake> sSnakeClone;
-	sSnakeClone.push_back(_snake);
-	std::vector<PathMarker> sMovesCopy;
-	HamiltonianCycle hamiltonianCycle;
-	std::thread hamiltonianCycleThread(&HamiltonianCycle::GetMoves, hamiltonianCycle, _snake, std::ref(_area), std::ref(sSnakeClone), std::ref(sMovesCopy));
-	hamiltonianCycleThread.join();
-	movesCopy = sMovesCopy;
-	*/
 
 	if(!foundFastPath)
 	{
+		// Find the longest path to tail
+		std::vector<Snake> sSnakeClone;
+		sSnakeClone.push_back(_snake);
+		std::vector<PathMarker> tMovesCopy;
+		HamiltonianCycle hamiltonianCycle;
+		std::thread hamiltonianCycleThread(&HamiltonianCycle::GetMoves, hamiltonianCycle, _snake, std::ref(_area), std::ref(sSnakeClone), std::ref(tMovesCopy));
+		hamiltonianCycleThread.join(); //TODO Causes memory problems without, Multiple A* at the same time (My guess, heap pointers)
+
 		// Find the shortest path to food unless the snake fills up 50% of the area
 		if(_snake.GetSnake().size() <= _area.GetGridSize() * _area.GetGridSize() * .5f)
 		{
@@ -49,23 +46,31 @@ GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 
 				// Check if longest path to tail exist
 				std::vector<PathMarker> tempMoves;
-				HamiltonianCycle hamiltonianCycle;
-				hamiltonianCycle.GetMoves(snakeCloneClone, _area, snakeClone, tempMoves);
+				HamiltonianCycle hamiltonianCycleT;
+				hamiltonianCycleT.GetMoves(snakeCloneClone, _area, snakeClone, tempMoves);
 				if(tempMoves.size() == 0)
 					movesCopy.clear();
 				else
+				{
 					foundFastPath = true;
+					if(hamiltonianCycleThread.joinable())
+						hamiltonianCycleThread.detach();
+				}
 			}
 			else if(aStarFood.HasFoundPath() && _snake.GetSnake().size() < 3)
+			{
 				foundFastPath = true;
+				if(hamiltonianCycleThread.joinable())
+					hamiltonianCycleThread.detach();
+			}
 		}
 
 		if(!foundFastPath)
 		{
-			HamiltonianCycle hamiltonianCycle;
-			snakeClone.clear();
-			snakeClone.push_back(_snake);
-			hamiltonianCycle.GetMoves(_snake, _area, snakeClone, movesCopy);
+			if(hamiltonianCycleThread.joinable())
+				hamiltonianCycleThread.join();
+
+			movesCopy = tMovesCopy;
 		}
 
 		// Choose a safe default move
@@ -96,6 +101,7 @@ void AI::DefaultMove(GridLocation& _move, std::vector<SnakePart>& _snake, GridLo
 	bool notRight = false;
 	bool notLeft = false;
 	Directions direction;
+
 	for(SnakePart part : _snake)
 	{
 		if(!_snake[0].GetLocation().Add(direction.Up).Equals(part.GetLocation()) && !notUp &&
