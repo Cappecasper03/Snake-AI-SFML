@@ -31,7 +31,7 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 	}
 	else
 	{
-		shortPath(_area, _snakeClones);
+		StraighPath(_area, _snakeClones);
 	}
 }
 
@@ -187,7 +187,7 @@ void AStar::MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, Snake& 
 	_snakeClone.GetHead().Move(_moveDirection, _area);
 }
 
-void AStar::shortPath(GameArea& _area, std::vector<Snake>& _snakeClones)
+void AStar::StraighPath(GameArea& _area, std::vector<Snake>& _snakeClones)
 {
 	GridLocation sTF = _snakeClones[0].GetHead().GetLocation().GetDirectionTo(goalNode.GetLocation());
 	GridLocation cur = _snakeClones[0].GetHead().GetLocation();

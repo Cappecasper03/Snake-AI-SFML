@@ -32,7 +32,7 @@ private:
 	void GetPath(GridLocation _lastPos, GameArea& _area);
 	void MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, Snake& _snakeClone);
 
-	void shortPath(GameArea& _area, std::vector<Snake>& _snakeClones);
+	void StraighPath(GameArea& _area, std::vector<Snake>& _snakeClones);
 
 	std::vector<PathMarker> open; // Stores the pathmarkers that hasn't been visited
 	std::vector<PathMarker> closed; // Stores all the visited pathmarkers

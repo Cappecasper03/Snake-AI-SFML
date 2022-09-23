@@ -3,9 +3,9 @@
 
 GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
-	area(20, (float)window.getSize().y, window.getSize().x),
+	area(10, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
-	FixedUpdateTime(.01f),
+	FixedUpdateTime(.05f),
 	state(GameStates::Playing),
 	moveDirection(),
 	food(area),
@@ -94,25 +94,29 @@ void GameManager::Draw()
 		window.draw(area.GetGridLines()[i]);
 	}
 
-	line[0].color = sf::Color::Magenta;
-	line[1].color = sf::Color::Magenta;
-	for(int i = 0; i < player.GetPath().size(); i++)
+	bool drawPath = false;
+	if(drawPath)
 	{
-		sf::RectangleShape marker = player.GetPath()[i].GetMarker();
-		if(i < player.GetPath().size() - 1)
+		line[0].color = sf::Color::Magenta;
+		line[1].color = sf::Color::Magenta;
+		for(int i = 0; i < player.GetPath().size(); i++)
 		{
-			sf::RectangleShape marker2 = player.GetPath()[i + 1].GetMarker();
+			sf::RectangleShape marker = player.GetPath()[i].GetMarker();
+			if(i < player.GetPath().size() - 1)
+			{
+				sf::RectangleShape marker2 = player.GetPath()[i + 1].GetMarker();
 
-			line[0].position = marker.getPosition() + marker.getSize() / 2.f;
-			line[1].position = marker2.getPosition() + marker2.getSize() / 2.f;
+				line[0].position = marker.getPosition() + marker.getSize() / 2.f;
+				line[1].position = marker2.getPosition() + marker2.getSize() / 2.f;
+			}
+			else
+			{
+				line[0].position = marker.getPosition() + marker.getSize() / 2.f;
+				line[1].position = snake.GetHead().GetVisual().getPosition() + snake.GetHead().GetVisual().getSize() / 2.f;
+			}
+			window.draw(line, 2, sf::Lines);
+			window.draw(marker);
 		}
-		else
-		{
-			line[0].position = marker.getPosition() + marker.getSize() / 2.f;
-			line[1].position = snake.GetHead().GetVisual().getPosition() + snake.GetHead().GetVisual().getSize() / 2.f;
-		}
-		window.draw(line, 2, sf::Lines);
-		window.draw(marker);
 	}
 
 	window.draw(food.GetVisual());
