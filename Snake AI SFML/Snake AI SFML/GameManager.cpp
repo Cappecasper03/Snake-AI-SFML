@@ -1,10 +1,11 @@
 #include "GameManager.h"
+#include <iostream>
 
 GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
-	area(10, (float)window.getSize().y, window.getSize().x),
+	area(20, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
-	FixedUpdateTime(.05f),
+	FixedUpdateTime(.01f),
 	state(GameStates::Playing),
 	moveDirection(),
 	food(area),
@@ -23,7 +24,12 @@ void GameManager::Update(sf::Time _deltaTime)
 		{
 			FixedUpdateTimer = 0;
 
+			sf::Clock clock;
 			moveDirection = player.GetNextMove(snake, food.GetLocation(), area);
+			sf::Time time = clock.restart();
+			if(time.asMilliseconds() > 0)
+				std::cout << time.asMilliseconds() << std::endl;
+
 			snake.Move(moveDirection, area);
 			CheckCollision();
 		}
@@ -48,6 +54,7 @@ void GameManager::CheckCollision()
 	if(snake.GetHead().GetLocation().Equals(food.GetLocation()))
 	{
 		snake.Grow(area);
+		food.RandomizeLocation(area, snake.GetSnake());
 
 		if((int)snake.GetSnake().size() == area.GetGridSize() * area.GetGridSize())
 		{
@@ -55,8 +62,6 @@ void GameManager::CheckCollision()
 			snake.Move(dir, area);
 			state = GameStates::Won;
 		}
-		else
-			food.RandomizeLocation(area, snake.GetSnake());
 	}
 
 	// If the snake head is outside the border walls

@@ -29,8 +29,8 @@ GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 		HamiltonianCycle hamiltonianCycle;
 		std::thread hamiltonianCycleThread(&HamiltonianCycle::GetMoves, hamiltonianCycle, _snake, std::ref(_area), std::ref(sSnakeClone), std::ref(tMovesCopy));
 
-		// Find the shortest path to food unless the snake fills up 50% of the area
-		if(_snake.GetSnake().size() <= _area.GetGridSize() * _area.GetGridSize() * .5f)
+		// Find the shortest path to food unless the snake fills up 80% of the area
+		if(_snake.GetSnake().size() <= _area.GetGridSize() * _area.GetGridSize() * .8f)
 		{
 			AStar aStarFood(_snake.GetHead().GetLocation(), _food, _area, snakeClone);
 			movesCopy = aStarFood.GetMoves();
@@ -56,12 +56,13 @@ GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 				foundFastPath = true;
 		}
 
+		sf::Clock clock;
 		if(hamiltonianCycleThread.joinable())
 			hamiltonianCycleThread.join();
+		sf::Time time = clock.restart();
 
 		if(!foundFastPath)
 			movesCopy = tMovesCopy;
-
 
 		// Choose a safe default move
 		if(!foundFastPath && movesCopy.size() == 0)

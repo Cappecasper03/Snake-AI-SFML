@@ -16,7 +16,7 @@ struct Directions // Stores the predefined values for all directions
 	const GridLocation Left = GridLocation(-1, 0);
 };
 
-class AStar
+class AStar // Or shortest path
 {
 public:
 	AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, std::vector<Snake>& _snakeClones);
@@ -31,6 +31,8 @@ private:
 	bool IsClosed(GridLocation _location);
 	void GetPath(GridLocation _lastPos, GameArea& _area);
 	void MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, Snake& _snakeClone);
+
+	void shortPath(GameArea& _area, std::vector<Snake>& _snakeClones);
 
 	std::vector<PathMarker> open; // Stores the pathmarkers that hasn't been visited
 	std::vector<PathMarker> closed; // Stores all the visited pathmarkers

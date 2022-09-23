@@ -19,6 +19,17 @@ PathMarker::PathMarker(GridLocation _location, GameArea& _area) :
 	SetMarker(_location, _area);
 }
 
+PathMarker::PathMarker(GridLocation _location, GameArea& _area, GridLocation _parent) :
+	location(_location),
+	G(0),
+	H(0),
+	F(0),
+	parent(_parent),
+	marker()
+{
+
+}
+
 PathMarker::PathMarker(GridLocation _location, float _g, float _h, float _f, GridLocation _parent) :
 	location(_location),
 	G(_g),

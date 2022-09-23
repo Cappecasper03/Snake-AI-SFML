@@ -19,13 +19,20 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 	Snake& temp = _snakeClones[_snakeClones.size() - 1];
 	temp.GetSnake().push_back(temp.GetSnake()[temp.GetSnake().size() - 1]);
 
-	do
+	if(goalNode.GetLocation().Equals(_snakeClones[0].GetTail().GetLocation()))
 	{
-		Search(lastPos, _area, _snakeClones);
-	} while(stillSearching);
+		do
+		{
+			Search(lastPos, _area, _snakeClones);
+		} while(stillSearching);
 
-	if(foundPath)
-		GetPath(lastPos.GetLocation(), _area);
+		if(foundPath)
+			GetPath(lastPos.GetLocation(), _area);
+	}
+	else
+	{
+		shortPath(_area, _snakeClones);
+	}
 }
 
 void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>& _snakeClones)
@@ -55,12 +62,11 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>&
 	{
 		GridLocation neighbourNode = dir.Add(_playerNode.GetLocation());
 
-		sf::Clock clock;
 		int currentSnake = 0;
 		// Makes sure we don't move the snake when we look for the tail
 		if(!_snakeClones[0].GetTail().GetLocation().Equals(goalNode.GetLocation()))
 		{
-			for(int i = 0; i < _snakeClones.size(); i++) //TODO Make Faster
+			for(int i = 0; i < _snakeClones.size(); i++)
 			{
 				// Finds the current position and makes a copy to move
 				if(_snakeClones[i].GetHead().GetLocation().ToVector() == _playerNode.GetLocation().ToVector())
@@ -179,4 +185,81 @@ void AStar::MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, Snake& 
 		_snakeClone.GetSnake()[i].Move(_snakeClone.GetSnake()[i - 1].GetLocation(), _area);
 	}
 	_snakeClone.GetHead().Move(_moveDirection, _area);
+}
+
+void AStar::shortPath(GameArea& _area, std::vector<Snake>& _snakeClones)
+{
+	GridLocation sTF = _snakeClones[0].GetHead().GetLocation().GetDirectionTo(goalNode.GetLocation());
+	GridLocation cur = _snakeClones[0].GetHead().GetLocation();
+	GridLocation pre;
+
+	while(!cur.Equals(goalNode.GetLocation()))
+	{
+		for(int i = 1; i < _snakeClones[0].GetSnake().size(); i++)
+		{
+			if(cur.Equals(_snakeClones[0].GetSnake()[i].GetLocation()))
+			{
+				sTF = goalNode.GetLocation();
+				break;
+			}
+		}
+
+		if(sTF.GetX() != 0 && sTF.GetY() == 0)
+		{
+			if(sTF.GetX() < 0)
+			{
+				closed.push_back(PathMarker(cur, _area, pre));
+				pre = cur;
+				cur = cur.Add(dir.Left);
+				sTF = sTF.Add(dir.Left);
+
+				GridLocation left = dir.Left;
+				_snakeClones[0].Move(left, _area);
+			}
+			else if(sTF.GetX() > 0)
+			{
+				closed.push_back(PathMarker(cur, _area, pre));
+				pre = cur;
+				cur = cur.Add(dir.Right);
+				sTF = sTF.Add(dir.Right);
+
+				GridLocation right = dir.Right;
+				_snakeClones[0].Move(right, _area);
+			}
+		}
+		else if(sTF.GetY() != 0 && sTF.GetX() == 0)
+		{
+			if(sTF.GetY() < 0)
+			{
+				closed.push_back(PathMarker(cur, _area, pre));
+				pre = cur;
+				cur = cur.Add(dir.Down);
+				sTF = sTF.Add(dir.Down);
+
+				GridLocation down = dir.Down;
+				_snakeClones[0].Move(down, _area);
+			}
+			else if(sTF.GetY() > 0)
+			{
+				closed.push_back(PathMarker(cur, _area, pre));
+				pre = cur;
+				cur = cur.Add(dir.Up);
+				sTF = sTF.Add(dir.Up);
+
+				GridLocation up = dir.Up;
+				_snakeClones[0].Move(up, _area);
+			}
+		}
+		else
+			break;
+
+		if(cur.Equals(goalNode.GetLocation()))
+			closed.push_back(PathMarker(cur, _area, pre));
+	}
+
+	if(cur.Equals(goalNode.GetLocation()))
+	{
+		GetPath(cur, _area);
+		foundPath = true;
+	}
 }

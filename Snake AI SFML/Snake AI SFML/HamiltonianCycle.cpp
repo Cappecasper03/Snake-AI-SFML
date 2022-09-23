@@ -8,9 +8,9 @@ HamiltonianCycle::HamiltonianCycle()
 void HamiltonianCycle::GetMoves(Snake _snake, GameArea& _area, std::vector<Snake>& _snakeClones, std::vector<PathMarker>& _moves)
 {
 	AStar aStarTail(_snake.GetHead().GetLocation(), _snake.GetTail().GetLocation(), _area, _snakeClones);
-
 	_moves = aStarTail.GetMoves();
-	ExtendPath(_moves, _snake, _area);
+
+	ExtendPath(_moves, _snake, _area); //TODO Make Faster
 }
 
 void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snakeClone, GameArea& _area)

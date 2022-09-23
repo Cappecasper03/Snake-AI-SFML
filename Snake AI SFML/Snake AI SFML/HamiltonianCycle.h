@@ -13,7 +13,7 @@ struct Node
 	bool isVisited = false;
 };
 
-class HamiltonianCycle
+class HamiltonianCycle // Or longest path
 {
 public:
 	HamiltonianCycle();
