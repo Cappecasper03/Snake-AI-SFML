@@ -28,7 +28,7 @@ void GameManager::Update(sf::Time _deltaTime)
 			moveDirection = player.GetNextMove(snake, food.GetLocation(), area);
 			sf::Time time = clock.restart();
 			if(time.asMilliseconds() > 0)
-				std::cout << time.asMilliseconds() << std::endl;
+				std::cout << time.asMilliseconds() << "\n\n";
 
 			snake.Move(moveDirection, area);
 			CheckCollision();

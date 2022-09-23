@@ -1,6 +1,8 @@
 #include "HamiltonianCycle.h"
 #include "AStar.h"
 
+#include <iostream>
+
 HamiltonianCycle::HamiltonianCycle()
 {
 }
@@ -10,7 +12,7 @@ void HamiltonianCycle::GetMoves(Snake _snake, GameArea& _area, std::vector<Snake
 	AStar aStarTail(_snake.GetHead().GetLocation(), _snake.GetTail().GetLocation(), _area, _snakeClones);
 	_moves = aStarTail.GetMoves();
 
-	ExtendPath(_moves, _snake, _area); //TODO Make Faster
+	ExtendPath(_moves, _snake, _area);
 }
 
 void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snakeClone, GameArea& _area)
@@ -24,7 +26,8 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 		movesCopy.push_back(_moves[i]);
 	}
 
-	for(int i = 1; i < movesCopy.size();)
+	sf::Clock clock;
+	for(int i = 1; i < movesCopy.size();) //TODO Make Faster
 	{
 		bool extended = false;
 
@@ -102,8 +105,9 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 		if(!extended)
 			i++;
 	}
+	sf::Time time = clock.restart();
+	std::cout << time.asMilliseconds() << std::endl;
 
-	_moves.clear();
 	if(movesCopy.size() > 1)
 	{
 		_moves = movesCopy;
