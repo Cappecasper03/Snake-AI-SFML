@@ -95,68 +95,56 @@ void AI::DefaultMove(GridLocation& _move, std::vector<SnakePart>& _snake, GridLo
 
 	for(SnakePart part : _snake)
 	{
-		if(!_snake[0].GetLocation().Add(direction.Up).Equals(part.GetLocation()) && !notUp &&
-			_snake[0].GetLocation().Add(direction.Up).GetY() <= _area.GetGridSize())
-		{
-			int dis = abs(_snake[0].GetLocation().Add(direction.Up).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Up).GetY() - _food.GetY());
-			if(distance <= dis)
-			{
-				distance = dis;
-				_move = direction.Up;
-			}
-		}
-		else
-		{
+		if(_snake[0].GetLocation().Add(direction.Up).Equals(part.GetLocation()))
 			notUp = true;
-			distance = 0;
-		}
-
-		if(!_snake[0].GetLocation().Add(direction.Down).Equals(part.GetLocation()) && !notDown &&
-			_snake[0].GetLocation().Add(direction.Down).GetY() > 0)
-		{
-			int dis = abs(_snake[0].GetLocation().Add(direction.Down).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Down).GetY() - _food.GetY());
-			if(distance <= dis)
-			{
-				distance = dis;
-				_move = direction.Down;
-			}
-		}
-		else
-		{
+		if(_snake[0].GetLocation().Add(direction.Down).Equals(part.GetLocation()))
 			notDown = true;
-			distance = 0;
-		}
-
-		if(!_snake[0].GetLocation().Add(direction.Right).Equals(part.GetLocation()) && !notRight &&
-			_snake[0].GetLocation().Add(direction.Right).GetX() <= _area.GetGridSize())
-		{
-			int dis = abs(_snake[0].GetLocation().Add(direction.Right).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Right).GetY() - _food.GetY());
-			if(distance <= dis)
-			{
-				distance = dis;
-				_move = direction.Right;
-			}
-		}
-		else
-		{
+		if(_snake[0].GetLocation().Add(direction.Right).Equals(part.GetLocation()))
 			notRight = true;
-			distance = 0;
-		}
-
-		if(!_snake[0].GetLocation().Add(direction.Left).Equals(part.GetLocation()) && !notLeft &&
-			_snake[0].GetLocation().Add(direction.Left).GetX() > 0)
-		{
-			int dis = abs(_snake[0].GetLocation().Add(direction.Left).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Left).GetY() - _food.GetY());
-			if(distance <= dis)
-			{
-				distance = dis;
-				_move = direction.Left;
-			}
-		}
-		else
-		{
+		if(_snake[0].GetLocation().Add(direction.Left).Equals(part.GetLocation()))
 			notLeft = true;
-			distance = 0;
+
+		if(notUp && notDown && notRight && notLeft)
+			break;
+	}
+
+	if(!notUp && _snake[0].GetLocation().Add(direction.Up).GetY() <= _area.GetGridSize())
+	{
+		int dis = abs(_snake[0].GetLocation().Add(direction.Up).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Up).GetY() - _food.GetY());
+		if(dis >= distance)
+		{
+			distance = dis;
+			_move = direction.Up;
+		}
+	}
+
+	if(!notDown && _snake[0].GetLocation().Add(direction.Down).GetY() > 0)
+	{
+		int dis = abs(_snake[0].GetLocation().Add(direction.Down).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Down).GetY() - _food.GetY());
+		if(dis >= distance)
+		{
+			distance = dis;
+			_move = direction.Down;
+		}
+	}
+
+	if(!notRight && _snake[0].GetLocation().Add(direction.Right).GetX() <= _area.GetGridSize())
+	{
+		int dis = abs(_snake[0].GetLocation().Add(direction.Right).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Right).GetY() - _food.GetY());
+		if(dis >= distance)
+		{
+			distance = dis;
+			_move = direction.Right;
+		}
+	}
+
+	if(!notLeft && _snake[0].GetLocation().Add(direction.Left).GetX() > 0)
+	{
+		int dis = abs(_snake[0].GetLocation().Add(direction.Left).GetX() - _food.GetX()) + abs(_snake[0].GetLocation().Add(direction.Left).GetY() - _food.GetY());
+		if(dis >= distance)
+		{
+			distance = dis;
+			_move = direction.Left;
 		}
 	}
 }
