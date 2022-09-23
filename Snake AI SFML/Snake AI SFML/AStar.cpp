@@ -6,8 +6,8 @@
 AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, std::vector<Snake>& _snakeClones) :
 	open(),
 	closed(),
-	startNode(_startNode, 0, 0, 0, nullptr),
-	goalNode(_goalNode, 0, 0, 0, nullptr),
+	startNode(_startNode, 0, 0, 0, GridLocation()),
+	goalNode(_goalNode, 0, 0, 0, GridLocation()),
 	lastPos(startNode),
 	stillSearching(true),
 	foundPath(false),
@@ -25,20 +25,7 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 	} while(stillSearching);
 
 	if(foundPath)
-		GetPath(&lastPos, _area);
-}
-
-AStar::~AStar()
-{
-	for(PathMarker marker : open)
-	{
-		delete marker.GetParent();
-	}
-
-	for(PathMarker marker : closed)
-	{
-		delete marker.GetParent();
-	}
+		GetPath(lastPos.GetLocation(), _area);
 }
 
 void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>& _snakeClones)
@@ -122,11 +109,8 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>&
 		// The sum of G and H
 		float F = G + H;
 
-		if(!UpdateMarker(neighbourNode, G, H, F, &_playerNode))
-		{
-			PathMarker* node = new PathMarker(_playerNode);
-			open.push_back(PathMarker(neighbourNode, G, H, F, node));
-		}
+		if(!UpdateMarker(neighbourNode, G, H, F, _playerNode.GetLocation()))
+			open.push_back(PathMarker(neighbourNode, G, H, F, _playerNode.GetLocation()));
 	}
 
 	if(open.size() == 0)
@@ -146,7 +130,7 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>&
 	lastPos = pm;
 }
 
-bool AStar::UpdateMarker(GridLocation _position, float _g, float _h, float _f, PathMarker* _parent)
+bool AStar::UpdateMarker(GridLocation _position, float _g, float _h, float _f, GridLocation _parent)
 {
 	for(PathMarker marker : open)
 	{
@@ -169,15 +153,22 @@ bool AStar::IsClosed(GridLocation _location)
 	return false;
 }
 
-void AStar::GetPath(PathMarker* _lastPos, GameArea& _area)
+void AStar::GetPath(GridLocation _lastPos, GameArea& _area)
 {
-	PathMarker* path = _lastPos;
+	GridLocation path = _lastPos;
 
-	while(path && !path->Equals(startNode))
+	while(!path.Equals(GridLocation(0, 0)) && !path.Equals(startNode.GetLocation()))
 	{
-		moves.push_back(PathMarker(path->GetLocation(), _area));
+		GridLocation temp(path);
+		auto it = std::find(closed.begin(), closed.end(), temp);
+		int i = (int)std::distance(closed.begin(), it);
 
-		path = path->GetParent();
+		if(i != closed.size())
+		{
+			moves.push_back(PathMarker(path, _area));
+		}
+
+		path = closed[i].GetParent();
 	}
 }
 

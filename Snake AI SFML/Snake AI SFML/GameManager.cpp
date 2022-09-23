@@ -2,7 +2,7 @@
 
 GameManager::GameManager() :
 	window(sf::VideoMode(1200, 800), "Snake AI"),
-	area(20, (float)window.getSize().y, window.getSize().x),
+	area(10, (float)window.getSize().y, window.getSize().x),
 	FixedUpdateTimer(0),
 	FixedUpdateTime(.05f),
 	state(GameStates::Playing),
@@ -48,13 +48,15 @@ void GameManager::CheckCollision()
 	if(snake.GetHead().GetLocation().Equals(food.GetLocation()))
 	{
 		snake.Grow(area);
-		food.RandomizeLocation(area, snake.GetSnake());
 
 		if((int)snake.GetSnake().size() == area.GetGridSize() * area.GetGridSize())
 		{
-			snake.Move(moveDirection, area);
+			GridLocation dir = snake.GetHead().GetLocation().GetDirectionTo(food.GetLocation());
+			snake.Move(dir, area);
 			state = GameStates::Won;
 		}
+		else
+			food.RandomizeLocation(area, snake.GetSnake());
 	}
 
 	// If the snake head is outside the border walls

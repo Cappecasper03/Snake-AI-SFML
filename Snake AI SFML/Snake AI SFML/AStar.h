@@ -20,16 +20,16 @@ class AStar
 {
 public:
 	AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, std::vector<Snake>& _snakeClones);
-	~AStar();
+	~AStar() {};
 
 	std::vector<PathMarker>& GetMoves() { return moves; };
 	bool HasFoundPath() { return foundPath; }
 
 private:
 	void Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>& _snakeClones);
-	bool UpdateMarker(GridLocation _position, float _g, float _h, float _f, PathMarker* _parent);
+	bool UpdateMarker(GridLocation _position, float _g, float _h, float _f, GridLocation _parent);
 	bool IsClosed(GridLocation _location);
-	void GetPath(PathMarker* _lastPos, GameArea& _area);
+	void GetPath(GridLocation _lastPos, GameArea& _area);
 	void MoveSnakeClone(GridLocation _moveDirection, GameArea& _area, Snake& _snakeClone);
 
 	std::vector<PathMarker> open; // Stores the pathmarkers that hasn't been visited

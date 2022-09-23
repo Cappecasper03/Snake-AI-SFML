@@ -9,10 +9,8 @@ void HamiltonianCycle::GetMoves(Snake _snake, GameArea& _area, std::vector<Snake
 {
 	AStar aStarTail(_snake.GetHead().GetLocation(), _snake.GetTail().GetLocation(), _area, _snakeClones);
 
-	moves = aStarTail.GetMoves();
-	ExtendPath(moves, _snake, _area);
-
-	_moves = moves;
+	_moves = aStarTail.GetMoves();
+	ExtendPath(_moves, _snake, _area);
 }
 
 void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snakeClone, GameArea& _area)
@@ -53,6 +51,7 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentUp.location.Add(dir.Add(directions.Down)), _area));
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentUp.location.Add(dir), _area));
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentUp.location, _area));
+				i = 1;
 				extended = true;
 			}
 			else if(!currentDown.isVisited && !nextDown.isVisited)
@@ -61,6 +60,7 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentDown.location.Add(dir.Add(directions.Up)), _area));
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentDown.location.Add(dir), _area));
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentDown.location, _area));
+				i = 1;
 				extended = true;
 			}
 		}
@@ -85,6 +85,7 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentRight.location.Add(dir.Add(directions.Left)), _area)));
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentRight.location.Add(dir), _area)));
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentRight.location, _area));
+				i = 1;
 				extended = true;
 			}
 			else if(!currentLeft.isVisited && !nextLeft.isVisited)
@@ -93,6 +94,7 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentLeft.location.Add(dir.Add(directions.Right)), _area)));
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(PathMarker(currentLeft.location.Add(dir), _area)));
 				movesCopy.insert(movesCopy.begin() + i, PathMarker(currentLeft.location, _area));
+				i = 1;
 				extended = true;
 			}
 		}
@@ -101,17 +103,18 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 			i++;
 	}
 
-	moves.clear();
-	if(movesCopy.size() > 2)
+	_moves.clear();
+	if(movesCopy.size() > 1)
 	{
-		moves = movesCopy;
-		moves.erase(moves.begin());
+		_moves = movesCopy;
+		_moves.erase(_moves.begin());
 		movesCopy.clear();
-		for(int i = (int)moves.size() - 1; i >= 0; i--)
+		for(int i = (int)_moves.size() - 1; i >= 0; i--)
 		{
-			movesCopy.push_back(moves[i]);
+			movesCopy.push_back(_moves[i]);
 		}
-		moves = movesCopy;
+
+		_moves = movesCopy;
 	}
 }
 

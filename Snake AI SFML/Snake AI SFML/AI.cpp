@@ -28,7 +28,6 @@ GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 		std::vector<PathMarker> tMovesCopy;
 		HamiltonianCycle hamiltonianCycle;
 		std::thread hamiltonianCycleThread(&HamiltonianCycle::GetMoves, hamiltonianCycle, _snake, std::ref(_area), std::ref(sSnakeClone), std::ref(tMovesCopy));
-		hamiltonianCycleThread.join(); //TODO Causes memory problems without, Multiple A* at the same time (My guess, heap pointers)
 
 		// Find the shortest path to food unless the snake fills up 50% of the area
 		if(_snake.GetSnake().size() <= _area.GetGridSize() * _area.GetGridSize() * .5f)
@@ -51,27 +50,18 @@ GridLocation AI::GetNextMove(Snake _snake, GridLocation _food, GameArea& _area)
 				if(tempMoves.size() == 0)
 					movesCopy.clear();
 				else
-				{
 					foundFastPath = true;
-					if(hamiltonianCycleThread.joinable())
-						hamiltonianCycleThread.detach();
-				}
 			}
 			else if(aStarFood.HasFoundPath() && _snake.GetSnake().size() < 3)
-			{
 				foundFastPath = true;
-				if(hamiltonianCycleThread.joinable())
-					hamiltonianCycleThread.detach();
-			}
 		}
+
+		if(hamiltonianCycleThread.joinable())
+			hamiltonianCycleThread.join();
 
 		if(!foundFastPath)
-		{
-			if(hamiltonianCycleThread.joinable())
-				hamiltonianCycleThread.join();
-
 			movesCopy = tMovesCopy;
-		}
+
 
 		// Choose a safe default move
 		if(!foundFastPath && movesCopy.size() == 0)

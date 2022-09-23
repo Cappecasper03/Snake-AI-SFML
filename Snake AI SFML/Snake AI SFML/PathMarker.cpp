@@ -5,7 +5,7 @@ PathMarker::PathMarker(GridLocation _location) :
 	G(0),
 	H(0),
 	F(0),
-	parent(nullptr)
+	parent()
 {
 }
 
@@ -14,12 +14,12 @@ PathMarker::PathMarker(GridLocation _location, GameArea& _area) :
 	G(0),
 	H(0),
 	F(0),
-	parent(nullptr)
+	parent()
 {
 	SetMarker(_location, _area);
 }
 
-PathMarker::PathMarker(GridLocation _location, float _g, float _h, float _f, PathMarker* _parent) :
+PathMarker::PathMarker(GridLocation _location, float _g, float _h, float _f, GridLocation _parent) :
 	location(_location),
 	G(_g),
 	H(_h),
@@ -29,7 +29,7 @@ PathMarker::PathMarker(GridLocation _location, float _g, float _h, float _f, Pat
 {
 }
 
-void PathMarker::Update(float _g, float _h, float _f, PathMarker* _parent)
+void PathMarker::Update(float _g, float _h, float _f, GridLocation _parent)
 {
 	G = _g;
 	H = _h;

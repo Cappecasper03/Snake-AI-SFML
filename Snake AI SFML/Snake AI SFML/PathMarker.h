@@ -9,11 +9,11 @@ class PathMarker
 public:
 	PathMarker(GridLocation _location);
 	PathMarker(GridLocation _location, GameArea& _area);
-	PathMarker(GridLocation _location, float _g, float _h, float _f, PathMarker* _parent);
+	PathMarker(GridLocation _location, float _g, float _h, float _f, GridLocation _parent);
 	~PathMarker() {};
 
 	bool Equals(PathMarker& _pathmarker) { return location.Equals(_pathmarker.GetLocation()); }
-	void Update(float _g, float _h, float _f, PathMarker* _parent);
+	void Update(float _g, float _h, float _f, GridLocation _parent);
 
 	bool operator==(GridLocation _other) { return location == _other; }
 	bool operator==(PathMarker _other) { return location == _other.GetLocation(); }
@@ -21,7 +21,7 @@ public:
 	GridLocation GetLocation() { return location; }
 	float GetG() { return G; }
 	float GetF() { return F; }
-	PathMarker* GetParent() { return parent; }
+	GridLocation GetParent() { return parent; }
 	sf::RectangleShape GetMarker() { return marker; }
 
 private:
@@ -35,7 +35,7 @@ private:
 	float G;
 	float H;
 	float F;
-	PathMarker* parent;
+	GridLocation parent;
 	sf::RectangleShape marker;
 };
 
