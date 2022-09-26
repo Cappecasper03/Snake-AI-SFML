@@ -19,7 +19,7 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 	Snake& temp = _snakeClones[_snakeClones.size() - 1];
 	temp.GetSnake().push_back(temp.GetSnake()[temp.GetSnake().size() - 1]);
 
-	if(goalNode.GetLocation().Equals(_snakeClones[0].GetTail().GetLocation()))
+	if(goalNode.GetLocation().Equals(_snakeClones[0].GetTail().GetLocation()) || true)
 	{
 		do
 		{
@@ -29,7 +29,7 @@ AStar::AStar(GridLocation _startNode, GridLocation _goalNode, GameArea& _area, s
 		if(foundPath)
 			GetPath(lastPos.GetLocation(), _area);
 	}
-	else
+	else // Find food that is a straight path
 	{
 		StraighPath(_area, _snakeClones);
 	}
@@ -73,7 +73,7 @@ void AStar::Search(PathMarker& _playerNode, GameArea& _area, std::vector<Snake>&
 				{
 					_snakeClones.push_back(Snake(_snakeClones[i]));
 					MoveSnakeClone(dir, _area, _snakeClones[_snakeClones.size() - 1]);
-					currentSnake = i;
+					//currentSnake = i;
 					break;
 				}
 			}

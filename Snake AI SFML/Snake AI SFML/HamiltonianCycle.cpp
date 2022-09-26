@@ -26,12 +26,8 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 		movesCopy.push_back(_moves[i]);
 	}
 
-	sf::Clock clock;
 	for(int i = 1; i < movesCopy.size();) //TODO Make Faster
 	{
-		if(i >= pow(_area.GetGridSize(), 2) / 8)
-			break;
-
 		bool extended = false;
 
 		GridLocation dir = movesCopy[i - 1].GetLocation().GetDirectionTo(movesCopy[i].GetLocation());
@@ -108,8 +104,6 @@ void HamiltonianCycle::ExtendPath(std::vector<PathMarker>& _moves, Snake& _snake
 		if(!extended)
 			i++;
 	}
-	sf::Time time = clock.restart();
-	std::cout << time.asMilliseconds() << std::endl;
 
 	if(movesCopy.size() > 1)
 	{
